@@ -1,0 +1,22 @@
+/* Topbar.css */
+.navbar {
+    padding: 1rem;
+  }
+  
+  .navbar-brand img {
+    max-height: 40px;
+  }
+  
+  .form-inline {
+    flex-grow: 1;
+    max-width: 500px;
+  }
+  
+  .form-inline .form-control {
+    width: 100%;
+  }
+  
+  .fa-user {
+    color: #333;
+    cursor: pointer;
+  }

@@ -1,0 +1,85 @@
+/* General styles for the form */
+form {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Styling for form groups */
+  form > div {
+    margin-bottom: 15px;
+  }
+  
+  /* Styling for labels */
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Styling for input fields and textareas */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="date"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 4px 0 10px;
+    display: block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  /* Styling for checkboxes */
+  input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  /* Styling for textareas */
+  textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  /* Styling for buttons */
+  button {
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Styling for different button types */
+  button[type="submit"] {
+    background-color: #28a745;
+    margin-right: 10px;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #218838;
+  }
+  
+  button[type="reset"] {
+    background-color: #dc3545;
+  }
+  
+  button[type="reset"]:hover {
+    background-color: #c82333;
+  }
