@@ -66,6 +66,14 @@ const MovieDetails = () => {
       <p><strong>Versión en Español:</strong> {formData.spanishVersion ? 'Sí' : 'No'}</p>
       <p><strong>Clasificación por Edad:</strong> {formData.ageRating}</p>
       <p><strong>Duración:</strong> {formData.duration} minutos</p>
+      <iframe
+        width="560"
+        height="315"
+        src={formData.trailer}
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      ></iframe>
       <a href={formData.trailer} target="_blank" rel="noopener noreferrer" className="trailer-link">Ver Trailer</a>
       <button onClick={handleReserveClick} className="back-button">Reservar</button>
       <button onClick={handleBackClick} className="back-button">Volver</button>

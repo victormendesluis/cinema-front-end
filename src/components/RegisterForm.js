@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../style/form.css';
 
 function RegisterForm() {
+  const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
+    surname: '',
     email: '',
-    password: ''
+    phone:'',
+    nickname:'',
+    password: '',
+    confirmPassword:''
   });
 
   // Función para manejar cambios en los campos del formulario
@@ -15,7 +20,7 @@ function RegisterForm() {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -39,27 +44,31 @@ function RegisterForm() {
     }
   };
 
+  const handleBackClick = () => {
+    navigate('/users');
+  };
+
   return (
     <div className="login-container">
       <h2>Registro</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="firstName">Nombre:</label>
+          <label htmlFor="name">Nombre:</label>
           <input
             type="text"
-            id="firstName"
-            name="firstName"
+            id="name"
+            name="name"
             value={formData.firstName}
             onChange={handleChange}
             required
           />
         </div>
         <div className="form-group">
-          <label htmlFor="lastName">Apellido:</label>
+          <label htmlFor="surname">Apellido:</label>
           <input
             type="text"
-            id="lastName"
-            name="lastName"
+            id="surname"
+            name="surname"
             value={formData.lastName}
             onChange={handleChange}
             required
@@ -77,6 +86,28 @@ function RegisterForm() {
           />
         </div>
         <div className="form-group">
+          <label htmlFor="phone">Número de teléfono:</label>
+          <input
+            type="numeric"
+            id="phone"
+            name="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="nickname">Nombre de usuario</label>
+          <input
+            type="text"
+            id="nickname"
+            name="nickname"
+            value={formData.nickname}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className="form-group">
           <label htmlFor="password">Contraseña:</label>
           <input
             type="password"
@@ -87,7 +118,19 @@ function RegisterForm() {
             required
           />
         </div>
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirme su contraseña:</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+        </div>
         <button type="submit">Registrarse</button>
+        <button onClick={handleBackClick}>Volver</button>
       </form>
     </div>
   );

@@ -1,45 +1,26 @@
 import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
-function UserCard({username}) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+function UserCard({user}) {
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Aquí podrías realizar la lógica de inicio de sesión
-    setIsLoggedIn(true);
-  };
+  const handleFilmsClick = () =>{
+    navigate('/movies')
+  }
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-  };
+  const handleUsersClick = () =>{
+    navigate('/users')
+  }
 
   return (
     <div className="user-card">
-      {!isLoggedIn ? (
-        // Formulario de inicio de sesión si el usuario no ha iniciado sesión
-        <div>
-          <h2>Iniciar Sesión</h2>
-          <form onSubmit={handleLogin}>
-            <label htmlFor="username">Usuario:</label>
-            <input type="text" id="username" />
-            <label htmlFor="password">Contraseña:</label>
-            <input type="password" id="password" />
-            <button type="submit">Iniciar Sesión</button>
-          </form>
-        </div>
-      ) : (
-        // Contenido después de iniciar sesión
-        <div>
-          <h2>Bienvenido, {username}!</h2>
-          <p>Ahora puedes realizar las siguientes acciones:</p>
-          <ul>
-            <li>Opción 1</li>
-            <li>Opción 2</li>
-            <li>Opción 3</li>
-          </ul>
-          <button onClick={handleLogout}>Cerrar Sesión</button>
-        </div>
-      )}
+      <div>
+        <p>Ahora puedes realizar las siguientes acciones:</p>
+        <ul>
+          <li><button onClick={handleFilmsClick}>Películas</button></li>
+          <li><button onClick={handleUsersClick}>Usuarios</button></li>
+        </ul>
+      </div>
     </div>
   );
 }

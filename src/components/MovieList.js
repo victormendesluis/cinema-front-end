@@ -1,55 +1,80 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import MovieCard from './MovieCard';
-import '../style/movielist.css'; // Asegúrate de tener este archivo para los estilos
+import { useNavigate } from 'react-router-dom';
 
 const MovieList = () => {
+    
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const response = await fetch('/movies'); // Ajusta la URL según tu API
-        if (!response.ok) {
-          throw new Error(`Error: ${response.statusText}`);
-        }
-        const data = await response.json();
-        
-        setMovies(data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
     fetchMovies();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const fetchMovies = () => {
+    fetch('/movies')
+      .then(response => response.json())
+      .then(data => setMovies(data))
+      .catch(error => console.error('Error fetching movies:', error));
+  };
+
+  const handleEdit = (movie) => {
+    // Aquí puedes implementar la lógica para editar la película
+    console.log("Editar película:", movie);
+  };
+
+  const handleDelete = (movieId) => {
+    // Aquí puedes implementar la lógica para borrar la película
+    //console.log("Borrar película con ID:", movieId);
+    // Por ejemplo, una solicitud DELETE a la API
+    fetch(`/movies/${movieId}`, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.ok) {
+          // Si la eliminación fue exitosa, actualiza la lista de películas
+          fetchMovies();
+        } else {
+          console.error('Error al borrar película');
+        }
+      })
+      .catch(error => console.error('Error al borrar película:', error));
+  };
+
+  const handleBackClick = () => {
+    navigate('/');
+  };
+
+  const handleInsertClick = () => {
+    navigate('/movies/register');
+  };
 
   return (
-    <div className="movie-list">
-      <h2>Lista de Películas</h2>
-      <ul>
-        {movies.map(movie => (
-          <li key={movie.id}>
-            <Link to={`/movies/${movie.id}`}>
-              <div className="movie-card">
-                <img src={movie.image} alt={movie.title} />
-                <div className="movie-info">
-                  <h3>{movie.title}</h3>
-                  <p>{movie.release}</p>
-                </div>
-              </div>
-            </Link>
-            <MovieCard movie={movie}/>
-          </li>
-        ))}
-      </ul>
+    <div>
+        <table className="table table-striped">
+        <thead className="thead-dark">
+            <tr>
+            <th>Titulo</th>
+            <th>Director</th>
+            <th>Año</th>
+            <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {movies.map(movie => (
+            <tr key={movie.id}>
+                <td>{movie.title}</td>
+                <td>{movie.directors}</td>
+                <td>{movie.release}</td>
+                <td>
+                <button className="btn btn-primary mr-2" onClick={() => handleEdit(movie)}>Editar</button>
+                <button className="btn btn-danger" onClick={() => handleDelete(movie.id)}>Borrar</button>
+                </td>
+            </tr>
+            ))}
+        </tbody>
+        </table>
+        <button className="btn btn-primary mb-3" onClick={handleBackClick}>Atrás</button>
+        <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Película</button>
     </div>
   );
 };

@@ -1,9 +1,8 @@
-//MovieForm.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../style/movieform.css';
 
-function MovieForm() {
+function MovieEditForm({film}) {
   const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
@@ -227,4 +226,4 @@ function MovieForm() {
   );
 }
 
-export default MovieForm;
+export default MovieEditForm;
