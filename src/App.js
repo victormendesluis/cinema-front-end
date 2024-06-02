@@ -1,23 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import MovieForm from './components/MovieForm';
 import MoviePage from './components/MoviePage';
 import MovieList from './components/MovieList';
 import MovieDetails from './components/MovieDetails';
+import MovieEditForm from './components/MovieEditForm';
 import RegisterForm from './components/RegisterForm';
 import UserCard from './components/UserCard';
 import UserPage from './components/UserPage';
+import UserEditForm from './components/UserEditForm';
+import ScreeningsList from './components/ScreeningsList';
+import MovieReservationForm from './components/MovieReservationForm';
+import AddScreeningForm from './components/AddScreeningForm';
 import TopBar from './components/Topbar';
 
 import './App.css';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const [user, setUser] = useState(null);
-
   useEffect(() => {
     const storedUser = localStorage.getItem('token');
-    if (storedUser) {
+    const admin=localStorage.getItem('admin');
+    if (storedUser && admin) {
       var userData=getUsuario();
       setUser(userData);
     }
@@ -30,12 +37,15 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('logged');
+    localStorage.removeItem('admin');
     setUser(null);
+    return <Navigate to="/" />;
   };
 
-  const getUsuario = async ()=> {
+  const getUsuario = async () => {
     try {
-      const response = await fetch(`/users/${localStorage.getItem()}`, {
+      const response = await fetch(`/users/${localStorage.getItem('token')}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -55,13 +65,83 @@ function App() {
 
       <Router>
         <Routes>
-          <Route path="/movies/:id" element={<MovieDetails/>} />
           <Route path="/" element={<MoviePage />} />
-          <Route path="/movies/register" element={<MovieForm/>}/>
-          <Route path="/movies" element={<MovieList/>}/>
-          <Route path="/users/:id" element={<UserCard/>}/>
-          <Route path="/users/register" element={<RegisterForm/>}/>
-          <Route path="/users" element={<UserPage/>}/>
+          <Route path="/movies/:id" element={<MovieDetails/>} />
+          
+          <Route 
+            path="/movies/register" 
+            element={
+              <PrivateRoute>
+                <MovieForm/>
+              </PrivateRoute>
+              }
+          />
+
+          <Route 
+            path="/movies" 
+            element={
+              <PrivateRoute>
+                <MovieList/>
+              </PrivateRoute>}
+          />
+
+          <Route 
+            path="/movies/:id/edit" 
+            element={
+              <PrivateRoute>
+                <MovieEditForm/>
+              </PrivateRoute>}
+          />
+
+          <Route 
+            path="/users/:id/edit" 
+            element={
+              <PrivateRoute>
+                <UserEditForm/>
+              </PrivateRoute>}
+          />
+
+          <Route 
+            path="/users/:id" 
+            element={
+              <PrivateRoute>
+                <UserCard/>
+              </PrivateRoute>}
+          />
+
+          <Route 
+            path="/users" 
+            element={
+              <PrivateRoute>
+                <UserPage />
+              </PrivateRoute>} 
+          />
+          <Route 
+            path="/users/register"
+            element={
+              <PrivateRoute>
+                <RegisterForm/>
+              </PrivateRoute>
+            } 
+          />
+
+          <Route path="/reserve/:id" element={<MovieReservationForm/>} />
+
+          <Route 
+            path="/screenings" 
+            element={
+            <PrivateRoute>
+              <ScreeningsList/>
+            </PrivateRoute>
+          }/>
+
+          <Route 
+            path="/screenings/add" 
+            element={
+            <PrivateRoute>
+              <AddScreeningForm/>
+            </PrivateRoute>
+          }/>
         </Routes>
       </Router>
     </div>

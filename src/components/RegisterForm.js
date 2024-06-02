@@ -6,13 +6,19 @@ function RegisterForm() {
   const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
+    id: 0,
     name: '',
     surname: '',
     email: '',
     phone:'',
     nickname:'',
     password: '',
-    confirmPassword:''
+    confirmPassword:'',
+    points: 100,
+    premium: false,
+    admin: false,
+    token: 'dummyToken4',
+    recover_code: 'dummyRecoverCode4'
   });
 
   // Función para manejar cambios en los campos del formulario
@@ -27,6 +33,7 @@ function RegisterForm() {
   // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
     try {
       const response = await fetch('/register', {
         method: 'POST',

@@ -35,7 +35,7 @@ const MovieDetails = () => {
   };
 
   const handleReserveClick = () =>{
-    navigate('/reserve');
+    navigate(`/reserve/${id}`, { state: { movieTitle: formData.title } });
   }
 
   if (loading) {

@@ -5,43 +5,41 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const TopBar = ({ user, onLogin, onLogout }) => {
   const [show, setShow] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [credentials, setCredentials] = useState({ identifier: '', password: '' });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCredentials({ ...credentials, [name]: value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/users', {
+      const response = await fetch('/login', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(credentials),
       });
       const data = await response.json();
-      //console.log('LOGIN BLYAT', data[0].nickname);
       if (response.ok) {
-        if(data[0].nickname===username){
-          // Guarda el token en localStorage
-          localStorage.setItem('token', data[0].id);
-          localStorage.setItem('logged',true);
-          onLogin(data[0]);
-          // Aquí puedes redirigir al usuario o mostrar un mensaje de éxito
-        }else{
-          console.log("Usuario o contraseña incorrectas");
+        localStorage.setItem('token', data.id);
+        localStorage.setItem('logged',true);
+        if(data.admin){
+          localStorage.setItem('admin', data.admin);
         }
+        onLogin(data);
       } else {
         console.error('Error de autenticación:', data.message);
-        // Maneja el error de autenticación, muestra mensajes de error, etc.
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      // Maneja el error, muestra mensajes de error, etc.
     }
-    //console.log({ username, password });
-    setUsername('');
-    setPassword('')
+    setCredentials('');
     handleClose();
   };
 
@@ -59,8 +57,9 @@ const TopBar = ({ user, onLogin, onLogout }) => {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item href='/users/${user.id}'>Perfil</Dropdown.Item>
-                  {!user.admin && <Dropdown.Item href="/movies">Películas</Dropdown.Item>}
-                  {!user.admin && <Dropdown.Item href="/users">Usuarios</Dropdown.Item>}
+                  {localStorage.getItem('admin') && <Dropdown.Item href="/movies">Películas</Dropdown.Item>}
+                  {localStorage.getItem('admin') && <Dropdown.Item href="/users">Usuarios</Dropdown.Item>}
+                  {localStorage.getItem('admin') && <Dropdown.Item href="/screenings">Programación</Dropdown.Item>}
                   <Dropdown.Item onClick={onLogout}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
@@ -84,8 +83,9 @@ const TopBar = ({ user, onLogin, onLogout }) => {
               <Form.Control 
                 type="text" 
                 placeholder="Introduce tu nombre de usuario" 
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)} 
+                name="identifier"
+                value={credentials.identifier} 
+                onChange={handleChange} 
                 required 
               />
             </Form.Group>
@@ -95,8 +95,9 @@ const TopBar = ({ user, onLogin, onLogout }) => {
               <Form.Control 
                 type="password" 
                 placeholder="Contraseña" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
+                name="password"
+                value={credentials.password} 
+                onChange={handleChange} 
                 required 
               />
             </Form.Group>

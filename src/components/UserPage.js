@@ -20,9 +20,8 @@ const UserPage = () => {
       .catch(error => console.error('Error fetching users:', error));
   };
 
-  const handleEdit = (user) => {
-    // Lógica para editar el usuario
-    //console.log("Editar usuario:", user);
+  const handleEdit = (userId) => {
+    navigate(`/users/${userId}/edit`)
   };
 
   const handleDelete = (userId) => {

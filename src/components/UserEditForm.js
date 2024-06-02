@@ -37,6 +37,7 @@ function UserEditForm() {
         });
         const data = await response.json();
         console.log(data);
+        setFormData(data);
         // Aquí puedes manejar la respuesta de la API, mostrar mensajes de éxito, etc.
       } catch (error) {
         console.error('Error al registrar usuario:', error);
@@ -47,7 +48,7 @@ function UserEditForm() {
     const handleBackClick = () => {
       navigate('/users');
     };
-  
+
     return (
       <div className="login-container">
         <h2>Registro</h2>

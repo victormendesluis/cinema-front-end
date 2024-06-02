@@ -7,9 +7,9 @@ function MovieForm() {
   const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
-    id: '',
+    id: 0,
     title: '',
-    originalTitle: '',
+    origTitle: '',
     release: '',
     genres: '',
     actors: '',
@@ -22,7 +22,8 @@ function MovieForm() {
     image: '',
     trailer: '',
     ageRating: '',
-    duration: 0
+    duration: 0,
+    url: 'http://localhost:8080/api/movies/3'
   });
 
   const handleChange = (e) => {
@@ -35,6 +36,7 @@ function MovieForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('PELICULA', JSON.stringify(formData));
     try {
       const response = await fetch('/movies', {
         method: 'POST',
@@ -59,17 +61,6 @@ function MovieForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="id">ID:</label>
-        <input
-          type="text"
-          id="id"
-          name="id"
-          value={formData.id}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
         <label htmlFor="title">Título:</label>
         <input
           type="text"
@@ -81,12 +72,12 @@ function MovieForm() {
         />
       </div>
       <div>
-        <label htmlFor="originalTitle">Título Original:</label>
+        <label htmlFor="origTitle">Título Original:</label>
         <input
           type="text"
-          id="originalTitle"
-          name="originalTitle"
-          value={formData.originalTitle}
+          id="origTitle"
+          name="origTitle"
+          value={formData.origTitle}
           onChange={handleChange}
         />
       </div>

@@ -19,7 +19,7 @@
     "reactstrap": "^8.10.0",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "http://localhost:8080/api",
+  "proxy": "http://192.168.0.18:8080/api",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

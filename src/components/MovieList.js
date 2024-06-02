@@ -18,8 +18,7 @@ const MovieList = () => {
   };
 
   const handleEdit = (movie) => {
-    // Aquí puedes implementar la lógica para editar la película
-    console.log("Editar película:", movie);
+    navigate(`/movies/${movie.id}/edit`);
   };
 
   const handleDelete = (movieId) => {
