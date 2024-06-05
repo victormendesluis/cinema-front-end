@@ -60,6 +60,7 @@ const TopBar = ({ user, onLogin, onLogout }) => {
                   {localStorage.getItem('admin') && <Dropdown.Item href="/movies">Películas</Dropdown.Item>}
                   {localStorage.getItem('admin') && <Dropdown.Item href="/users">Usuarios</Dropdown.Item>}
                   {localStorage.getItem('admin') && <Dropdown.Item href="/screenings">Programación</Dropdown.Item>}
+                  {localStorage.getItem('admin') && <Dropdown.Item href="/screens">Salas</Dropdown.Item>}
                   <Dropdown.Item onClick={onLogout}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

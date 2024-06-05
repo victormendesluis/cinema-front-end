@@ -72,8 +72,8 @@ const MovieList = () => {
             ))}
         </tbody>
         </table>
-        <button className="btn btn-primary mb-3" onClick={handleBackClick}>Atrás</button>
         <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Película</button>
+        <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
     </div>
   );
 };

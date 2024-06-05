@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../style/form.css';  // Importar el archivo CSS
 
 const AddScreeningForm = () => {
+  const{ id } = useParams();
   const [formData, setFormData] = useState({
     cinemaName: 'CinemaMM',
     screen: 0,
@@ -17,11 +18,24 @@ const AddScreeningForm = () => {
 
   const [movies, setMovies] = useState([]);
   const [screens, setScreens] = useState([]);
+  const [screening, setScreening] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simular fetch a la API para obtener las películas
-    // Reemplaza esto con tu llamada real a la API
+    const fetchScreening = async () => {
+        try {
+          const response = await fetch(`/screenings/${id}`);
+          if (response.ok) {
+            const data = await response.json();
+            setScreening(data);
+          } else {
+            console.error('Error al obtener las funciones.');
+          }
+        } catch (error) {
+          console.error('Error al obtener las funciones:', error);
+        }
+      };
+
     const fetchMovies = async () => {
       try {
         const response = await fetch('/movies');
@@ -87,7 +101,7 @@ const AddScreeningForm = () => {
     try {
       formData.screeningDayAndHourDTO.screeningDay=formatDateString(formData.screeningDayAndHourDTO.screeningDay);
       const response = await fetch('/screenings', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -117,7 +131,7 @@ const AddScreeningForm = () => {
           <label>Sala:</label>
           <select
             name="screen"
-            value={formData.screen}
+            value={screening.screen}
             onChange={handleChange}
             required
           >
@@ -133,7 +147,7 @@ const AddScreeningForm = () => {
           <label>Título de la película:</label>
           <select
             name="movieTitle"
-            value={formData.movieTitle}
+            value={screening.movieTitle}
             onChange={handleChange}
             required
           >
@@ -150,7 +164,7 @@ const AddScreeningForm = () => {
           <input
             type="date"
             name="screeningDay"
-            value={formData.screeningDayAndHourDTO.screeningDay}
+            value={screening.screeningDayAndHourDTO.screeningDay}
             onChange={handleChange}
             required
           />
@@ -160,7 +174,7 @@ const AddScreeningForm = () => {
           <input
             type="time"
             name="screeningStartTime"
-            value={formData.screeningDayAndHourDTO.screeningStartTime}
+            value={screening.screeningDayAndHourDTO.screeningStartTime}
             onChange={handleChange}
             required
           />
@@ -170,7 +184,7 @@ const AddScreeningForm = () => {
           <input
             type="text"
             name="audio"
-            value={formData.audio}
+            value={screening.audio}
             onChange={handleChange}
             required
           />
@@ -180,12 +194,12 @@ const AddScreeningForm = () => {
           <input
             type="number"
             name="screenPrice"
-            value={formData.screenPrice}
+            value={screening.screenPrice}
             onChange={handleChange}
             required
           />
         </div>
-        <button type="submit">Añadir Proyección</button>
+        <button type="submit">Modificar Proyección</button>
         <button onClick={handleBackClick}>Atrás</button>
       </form>
     </div>

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../style/movieform.css';
 
-function MovieEditForm({film}) {
+function MovieEditForm() {
+  const { id } = useParams();
   const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
     id: '',
     title: '',
-    originalTitle: '',
+    origTitle: '',
     release: '',
     genres: '',
     actors: '',
@@ -23,6 +24,24 @@ function MovieEditForm({film}) {
     ageRating: '',
     duration: 0
   });
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchMovieDetails = async () => {
+      try {
+        const response = await fetch(`/movies/${id}`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setFormData(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchMovieDetails();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,8 +54,8 @@ function MovieEditForm({film}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/movies', {
-        method: 'POST',
+      const response = await fetch(`/movies/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -80,12 +99,12 @@ function MovieEditForm({film}) {
         />
       </div>
       <div>
-        <label htmlFor="originalTitle">Título Original:</label>
+        <label htmlFor="origTitle">Título Original:</label>
         <input
           type="text"
-          id="originalTitle"
-          name="originalTitle"
-          value={formData.originalTitle}
+          id="origTitle"
+          name="origTitle"
+          value={formData.origTitle}
           onChange={handleChange}
         />
       </div>

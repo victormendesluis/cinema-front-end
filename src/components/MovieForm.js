@@ -19,11 +19,11 @@ function MovieForm() {
     synopsis: '',
     originalVersion: false,
     spanishVersion: true,
-    image: '',
+    image: null,
     trailer: '',
     ageRating: '',
     duration: 0,
-    url: 'http://localhost:8080/api/movies/3'
+    url: ''
   });
 
   const handleChange = (e) => {
@@ -34,16 +34,41 @@ function MovieForm() {
     });
   };
 
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      image: e.target.files[0]
+    });
+  };
+
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      originalVersion: name === 'originalVersion' ? checked : !checked,
+      spanishVersion: name === 'spanishVersion' ? checked : !checked,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('PELICULA', JSON.stringify(formData));
+
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (key === 'image') {
+        formDataToSend.append(key, formData[key], formData[key].name);
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
+    });
     try {
       const response = await fetch('/movies', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
       const data = await response.json();
       if(data){
@@ -156,7 +181,7 @@ function MovieForm() {
             type="checkbox"
             name="originalVersion"
             checked={formData.originalVersion}
-            onChange={handleChange}
+            onChange={handleCheckboxChange}
           />
           Versión Original
         </label>
@@ -167,19 +192,18 @@ function MovieForm() {
             type="checkbox"
             name="spanishVersion"
             checked={formData.spanishVersion}
-            onChange={handleChange}
+            onChange={handleCheckboxChange}
           />
           Versión en Español
         </label>
       </div>
       <div>
-        <label htmlFor="image">URL de la Imagen:</label>
+        <label htmlFor="image">Imagen:</label>
         <input
-          type="text"
+          type="file"
           id="image"
           name="image"
-          value={formData.image}
-          onChange={handleChange}
+          onChange={handleFileChange}
         />
       </div>
       <div>

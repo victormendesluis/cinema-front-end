@@ -54,7 +54,7 @@ const MovieDetails = () => {
     <div className="movie-details">
       <h1>{formData.title}</h1>
       <img src={formData.image} alt={formData.title} className="movie-image" />
-      <p><strong>Título Original:</strong> {formData.originalTitle}</p>
+      <p><strong>Título Original:</strong> {formData.origTitle}</p>
       <p><strong>Fecha de Estreno:</strong> {formData.release}</p>
       <p><strong>Géneros:</strong> {formData.genres}</p>
       <p><strong>Actores:</strong> {formData.actors}</p>

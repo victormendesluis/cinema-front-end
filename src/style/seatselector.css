@@ -1,0 +1,39 @@
+.seat-selection {
+  text-align: center;
+  margin: 20px;
+}
+
+.seat-grid {
+  display: inline-block;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.seat {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin: 5px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.seat.available {
+  background-color: #28a745;
+  color: white;
+}
+
+.seat.unavailable {
+  background-color: #dc3545;
+  color: white;
+}
+
+.seat.selected {
+  border: 2px solid #0000ff;
+}

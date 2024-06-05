@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../style/form.css';
 
 function UserEditForm() {
+    const { id } = useParams();
     const navigate = useNavigate();
     // State para almacenar los valores del formulario
     const [formData, setFormData] = useState({
@@ -11,10 +12,27 @@ function UserEditForm() {
       email: '',
       phone:'',
       nickname:'',
-      password: '',
-      confirmPassword:''
+      password: ''
     });
   
+    useEffect(() => {
+      const fetchUserDetails = async () => {
+        try {
+          const response = await fetch(`/users/${id}`);
+          if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+          }
+          const data = await response.json();
+          console.log('USUARIO', data);
+          setFormData(data);
+        } catch (error) {
+          console.log(error)
+        }
+      };
+  
+      fetchUserDetails();
+    }, [id]);
+
     // Función para manejar cambios en los campos del formulario
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -28,8 +46,8 @@ function UserEditForm() {
     const handleSubmit = async (e) => {
       e.preventDefault();
       try {
-        const response = await fetch('/register', {
-          method: 'POST',
+        const response = await fetch(`/users/${id}`, {
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -59,7 +77,7 @@ function UserEditForm() {
               type="text"
               id="name"
               name="name"
-              value={formData.firstName}
+              value={formData.name}
               onChange={handleChange}
               required
             />
@@ -70,7 +88,7 @@ function UserEditForm() {
               type="text"
               id="surname"
               name="surname"
-              value={formData.lastName}
+              value={formData.surname}
               onChange={handleChange}
               required
             />
@@ -104,28 +122,6 @@ function UserEditForm() {
               id="nickname"
               name="nickname"
               value={formData.nickname}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Contraseña:</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="confirmPassword">Confirme su contraseña:</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
               onChange={handleChange}
               required
             />

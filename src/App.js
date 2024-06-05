@@ -12,12 +12,15 @@ import UserCard from './components/UserCard';
 import UserPage from './components/UserPage';
 import UserEditForm from './components/UserEditForm';
 import ScreeningsList from './components/ScreeningsList';
-import MovieReservationForm from './components/MovieReservationForm';
 import AddScreeningForm from './components/AddScreeningForm';
+import DropdownFunciones from './components/ScreeningSelector';
 import TopBar from './components/Topbar';
 
 import './App.css';
 import PrivateRoute from './components/PrivateRoute';
+import ScreenList from './components/ScreenList';
+import AddScreenForm from './components/AddScreenForm';
+import EditScreenForm from './components/EditScreenForm';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -125,13 +128,13 @@ function App() {
             } 
           />
 
-          <Route path="/reserve/:id" element={<MovieReservationForm/>} />
+          <Route path="/reserve/:id" element={<DropdownFunciones/>} />
 
           <Route 
             path="/screenings" 
             element={
             <PrivateRoute>
-              <ScreeningsList/>
+              {<ScreeningsList/>}
             </PrivateRoute>
           }/>
 
@@ -139,7 +142,31 @@ function App() {
             path="/screenings/add" 
             element={
             <PrivateRoute>
-              <AddScreeningForm/>
+              {<AddScreeningForm/>}
+            </PrivateRoute>
+          }/>
+
+          <Route 
+            path="/screens" 
+            element={
+            <PrivateRoute>
+              {<ScreenList/>}
+            </PrivateRoute>
+          }/>
+
+          <Route 
+            path="/screens/add" 
+            element={
+            <PrivateRoute>
+              {<AddScreenForm/>}
+            </PrivateRoute>
+          }/>
+
+          <Route 
+            path="/screens/:id/edit" 
+            element={
+            <PrivateRoute>
+              {<EditScreenForm/>}
             </PrivateRoute>
           }/>
         </Routes>

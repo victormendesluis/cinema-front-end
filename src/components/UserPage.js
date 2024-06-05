@@ -20,18 +20,18 @@ const UserPage = () => {
       .catch(error => console.error('Error fetching users:', error));
   };
 
-  const handleEdit = (userId) => {
-    navigate(`/users/${userId}/edit`)
+  const handleEdit = (user) => {
+    navigate(`/users/${user.id}/edit`)
   };
 
-  const handleDelete = (userId) => {
-    fetch(`/users/${userId}`, {
+  const handleDelete = (usuario) => {
+    fetch(`/users/${usuario.id}`, {
         method: 'DELETE',
       })
         .then(response => {
           if (response.ok) {
             // Eliminar el usuario localmente después de la eliminación exitosa
-            const updatedUsers = users.filter(user => user.id !== userId);
+            const updatedUsers = users.filter(user => user.id !== usuario.id);
             setUsers(updatedUsers);
             console.log("Usuario borrado con éxito");
           } else {
@@ -74,15 +74,15 @@ const UserPage = () => {
                 <td>{user.role}</td>
                 <td>
                   <button className="btn btn-primary mr-2" onClick={() => handleEdit(user)}>Editar</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(user.id)}>Borrar</button>
+                  <button className="btn btn-danger" onClick={() => handleDelete(user)}>Borrar</button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      <button className="btn btn-primary mb-3" onClick={handleBackClick}>Atrás</button>
       <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Usuario</button>
+      <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
     </div>
   );
 };
