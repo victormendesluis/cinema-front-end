@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import '../style/moviedetails.css';
@@ -39,7 +40,11 @@ const MovieDetails = () => {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>    
+            <Spinner animation="border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+           </div>;
   }
 
   if (error) {

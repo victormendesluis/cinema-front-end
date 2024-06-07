@@ -12,7 +12,7 @@ const DropdownFunciones = () => {
   useEffect(() => {
     const fetchFunciones = async () => {
       try {
-        const response = await fetch(`/movie/${id}/screenings/week`);
+        const response = await fetch(`/screenings/week/available`); // /movie/${id}/screenings/week
         if (response.ok) {
             const data=await response.json();
             setScreenings(data);
@@ -61,7 +61,7 @@ const DropdownFunciones = () => {
       {selectedScreening && screen.length > 0 && (
         <SeatSelection seats={screen} screeningId={selectedScreening} />
       )}
-      <button onClick={handleBackClick}>Atrás</button>
+      <button className="btn btn-primary" onClick={handleBackClick}>Atrás</button>
     </div>
   );
 };

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import '../style/form.css';
 
 function RegisterForm() {
-  const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
     id: 0,
@@ -44,6 +43,8 @@ function RegisterForm() {
       });
       const data = await response.json();
       console.log(data);
+      alert('Usuario registrado correctamente');
+      Navigate('/');
       // Aquí puedes manejar la respuesta de la API, mostrar mensajes de éxito, etc.
     } catch (error) {
       console.error('Error al registrar usuario:', error);
@@ -51,13 +52,8 @@ function RegisterForm() {
     }
   };
 
-  const handleBackClick = () => {
-    navigate('/users');
-  };
-
   return (
     <div className="login-container">
-      <h2>Registro</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="name">Nombre:</label>
@@ -137,7 +133,6 @@ function RegisterForm() {
           />
         </div>
         <button type="submit">Registrarse</button>
-        <button onClick={handleBackClick}>Volver</button>
       </form>
     </div>
   );

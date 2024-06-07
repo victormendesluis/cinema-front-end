@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../style/seatselector.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,10 +6,18 @@ function SeatSelection({ seats, screeningId }) {
   const [seatState, setSeatState] = useState(seats);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [userIdentifier, setUser] = useState([]);
-  const navigate=useNavigate();
+  const [screening, setScreening] =useState([]);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [paymentDetails, setPaymentDetails] = useState({
+    name: '',
+    cardNumber: '',
+    expiryDate: '',
+    cvv: ''
+  });
+  const navigate = useNavigate();
 
   const handleSeatClick = (seat) => {
-    if (seat.available) {
+    if (seat.available || selectedSeats.includes(seat.id)) {
       setSelectedSeats((prevSelectedSeats) =>
         prevSelectedSeats.includes(seat.id)
           ? prevSelectedSeats.filter((id) => id !== seat.id)
@@ -24,21 +32,32 @@ function SeatSelection({ seats, screeningId }) {
     }
   };
 
-  const getUserIdentifier = async () =>{
-    try{
+  const getUserIdentifier = async () => {
+    try {
       const response = await fetch(`/users/${localStorage.getItem('token')}`);
       if (response.ok) {
         const data = await response.json();
         setUser(data.email);
-      } 
-    }catch(error){
+      }
+    } catch (error) {
       console.error('Error al recuperar al usuario:', error);
     }
-  }
+  };
+
+  const getScreening = async () => {
+    try {
+      const response = await fetch(`/screenings/${screeningId}`);
+      if (response.ok) {
+        const data = await response.json();
+        setScreening(data);
+      }
+    } catch (error) {
+      console.error('Error al recuperar al usuario:', error);
+    }
+  };
 
   const renderSeats = () => {
     const rows = {};
-    getUserIdentifier();
     seatState.forEach((seat) => {
       if (!rows[seat.row_number]) {
         rows[seat.row_number] = [];
@@ -51,9 +70,7 @@ function SeatSelection({ seats, screeningId }) {
         {rows[rowNumber].map((seat) => (
           <div
             key={seat.id}
-            className={`seat ${seat.available ? 'available' : 'unavailable'} ${
-              selectedSeats.includes(seat.id) ? 'selected' : ''
-            }`}
+            className={`seat ${seat.available ? 'available' : 'unavailable'} ${selectedSeats.includes(seat.id) ? 'selected' : ''}`}
             onClick={() => handleSeatClick(seat)}>
           </div>
         ))}
@@ -61,7 +78,22 @@ function SeatSelection({ seats, screeningId }) {
     ));
   };
 
-  const handleReserveClick = async () => {
+  const handleReserveClick = () => {
+    getUserIdentifier();
+    getScreening();
+    setShowPaymentForm(true);
+  };
+
+  const handlePaymentChange = (e) => {
+    const { name, value } = e.target;
+    setPaymentDetails((prevDetails) => ({
+      ...prevDetails,
+      [name]: value
+    }));
+  };
+
+  const handlePaymentSubmit = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch(`/screenings/ticket/buyNoSecurity`, { // Reemplaza con tu endpoint de API
         method: 'POST',
@@ -71,7 +103,8 @@ function SeatSelection({ seats, screeningId }) {
         body: JSON.stringify({
           seats: selectedSeats,
           screening_id: parseInt(screeningId),
-          userIdentifier: userIdentifier
+          userIdentifier: userIdentifier,
+          paymentDetails
         }),
       });
       console.log(response);
@@ -86,11 +119,54 @@ function SeatSelection({ seats, screeningId }) {
     }
   };
 
+  const calculatePrice = () => {
+    const pricePerSeat = screening.price; // Precio por asiento (puedes cambiarlo según tu lógica)
+    return selectedSeats.length * pricePerSeat;
+  };
+
   return (
     <div className="seat-selection">
       <h2>Eliga sus asientos</h2>
       <div className="seat-grid">{renderSeats()}</div>
-      <button onClick={handleReserveClick}>Reservar</button>
+      <div>
+      {!showPaymentForm && (
+        <button type="button" className="btn btn-primary" onClick={handleReserveClick}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-ticket-detailed-fill" viewBox="0 0 16 16">
+            <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1"/>
+          </svg>
+          Reservar
+        </button>
+      )}
+      </div>
+
+
+      {showPaymentForm && (
+        <div className="payment-modal">
+          <h3>Formulario de Pago</h3>
+          <form onSubmit={handlePaymentSubmit}>
+            <div>
+              <label>Nombre:</label>
+              <input type="text" name="name" value={paymentDetails.name} onChange={handlePaymentChange} required />
+            </div>
+            <div>
+              <label>Número de Tarjeta:</label>
+              <input type="text" name="cardNumber" value={paymentDetails.cardNumber} onChange={handlePaymentChange} required />
+            </div>
+            <div>
+              <label>Fecha de Expiración:</label>
+              <input type="text" name="expiryDate" value={paymentDetails.expiryDate} onChange={handlePaymentChange} required />
+            </div>
+            <div>
+              <label>CVV:</label>
+              <input type="text" name="cvv" value={paymentDetails.cvv} onChange={handlePaymentChange} required />
+            </div>
+            <div>
+              <label>Total a Pagar: ${calculatePrice()}</label>
+            </div>
+            <button type="submit">Pagar y Reservar</button>
+          </form>
+        </div>
+      )}
     </div>
   );
 }

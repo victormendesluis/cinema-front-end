@@ -126,7 +126,7 @@ function UserEditForm() {
               required
             />
           </div>
-          <button type="submit">Registrarse</button>
+          <button type="submit">Actualizar Usuario</button>
           <button onClick={handleBackClick}>Volver</button>
         </form>
       </div>

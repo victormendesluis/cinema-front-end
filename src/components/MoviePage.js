@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MovieCard from './MovieCard';
+import Spinner from 'react-bootstrap/Spinner';
+import Carousel from 'react-bootstrap/Carousel';
 import '../style/moviepage.css'; // Asegúrate de tener este archivo para los estilos
 
 const MoviePage = () => {
@@ -34,39 +36,46 @@ const MoviePage = () => {
     navigate(`/movies/${id}`);
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div>
+                        <Spinner animation="border" role="status">
+                          <span className="visually-hidden">Cargando...</span>
+                        </Spinner>
+                      </div>;
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
-      <h2>Lista de Películas</h2>
-      <div className="movie-list">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie}/>
-        ))}
-      </div>
-
-      <div>
-      <h2>Cartelera</h2>
       {loading ? (
-        <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
+        <div>
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </Spinner>
         </div>
       ) : (
-        <div className="d-flex flex-wrap">
+        <div>
+          <h2>Estrenos</h2>
+          <Carousel>
           {movies.map(movie => (
-            <img
+            <Carousel.Item interval={2000}>
+            <img 
               key={movie.id}
               src={movie.image}
               alt={movie.title}
-              className="img-thumbnail m-2"
+              className="d-block w-100"
               style={{ cursor: 'pointer' }}
               onClick={() => handleClick(movie.id)}
             />
+            </Carousel.Item>
           ))}
+          </Carousel>
+          <h2>Cartelera</h2>
+            <div className="movie-list">
+              {movies.map(movie => (
+                <MovieCard key={movie.id} movie={movie}/>
+              ))}
+            </div>
         </div>
       )}
-      </div>
     </div>
   );
 };

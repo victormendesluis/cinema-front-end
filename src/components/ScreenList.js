@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import Spinner from 'react-bootstrap/Spinner';
 
 const ScreenList = () => {
   const [screens, setScreens] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,6 +23,7 @@ const ScreenList = () => {
     };
 
     fetchAllScreens();
+    setLoading(false);
   }, []);
 
   const handleBackClick = () => {
@@ -38,33 +40,39 @@ const ScreenList = () => {
 
   return (
     <div>
-      <h2>Todas las Salas</h2>
-      <table className="table table-striped">
-        <thead className="thead-dark">
-          <tr>
-            <th>Cine</th>
-            <th>Sala</th>
-            <th>Filas</th>
-            <th>Asientos por fila</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {screens.map(screen => (
-            <tr key={screen.id}>
-              <td>{screen.cinema.name}</td>
-              <td>{screen.supports}</td>
-              <td>{screen.rows}</td>
-              <td>{screen.numberOfSeats}</td>
-              <td><button className="btn btn-primary mr-2" onClick={()=>handleEditClick(screen)}>Editar</button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {loading ? (
+        <div>
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </Spinner>
+        </div>
+      ) : (
       <div>
-        <button className="btn btn-primary mb-3" onClick={handleAddClick}>Añadir Sala</button>
-        <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+        <h2>Todas las Salas</h2>
+        <table className="table table-striped">
+          <thead className="thead-dark">
+            <tr>
+              <th>Cine</th>
+              <th>Sala</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {screens.map(screen => (
+              <tr key={screen.id}>
+                <td>{screen.cinema.name}</td>
+                <td>{screen.supports}</td>
+                <td><button className="btn btn-primary mr-2" onClick={()=>handleEditClick(screen)}>Editar</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div>
+          <button className="btn btn-primary mb-3" onClick={handleAddClick}>Añadir Sala</button>
+          <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+        </div>
       </div>
+      )}
     </div>
   );
 };

@@ -24,7 +24,8 @@ function MovieEditForm() {
     ageRating: '',
     duration: 0
   });
-  const [error, setError] = useState(null);
+  
+  //const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -36,7 +37,8 @@ function MovieEditForm() {
         const data = await response.json();
         setFormData(data);
       } catch (error) {
-        setError(error.message);
+        //setError(error.message);
+        console.log(error);
       }
     };
 
@@ -239,7 +241,7 @@ function MovieEditForm() {
           onChange={handleChange}
         />
       </div>
-      <button type="submit">Agregar Película</button>
+      <button type="submit">Actualizar Película</button>
       <button onClick={handleBackClick}>Volver</button>
     </form>
   );

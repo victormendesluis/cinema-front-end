@@ -2,13 +2,20 @@ import React, { useState } from 'react';
 import { Navbar, Nav, Modal, Button, Form, Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import RegisterForm from './RegisterForm';
 
 const TopBar = ({ user, onLogin, onLogout }) => {
-  const [show, setShow] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const [credentials, setCredentials] = useState({ identifier: '', password: '' });
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleCloseLogin = () => setShowLogin(false);
+  const handleShowLogin = () => setShowLogin(true);
+  const handleCloseRegister = () => setShowRegister(false);
+  const handleShowRegister = () => {
+    setShowLogin(false);
+    setShowRegister(true);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,23 +47,24 @@ const TopBar = ({ user, onLogin, onLogout }) => {
       console.error('Error al iniciar sesión:', error);
     }
     setCredentials('');
-    handleClose();
+    handleCloseLogin();
   };
 
   return (
+    <div className='topbar'>
     <>
-      <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar className='justify-content-between' bg="dark" variant='dark' expand="lg">
         <Navbar.Brand href="/">Filmmes</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
+        {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />*/}
+        <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="ml-auto">
-          {user ? (
+            {user ? (
               <Dropdown align="end">
                 <Dropdown.Toggle variant="success" id="dropdown-basic">
                   <FontAwesomeIcon icon={faUser} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item href='/users/${user.id}'>Perfil</Dropdown.Item>
+                  <Dropdown.Item href={`/users/${user.id}`}>Perfil</Dropdown.Item>
                   {localStorage.getItem('admin') && <Dropdown.Item href="/movies">Películas</Dropdown.Item>}
                   {localStorage.getItem('admin') && <Dropdown.Item href="/users">Usuarios</Dropdown.Item>}
                   {localStorage.getItem('admin') && <Dropdown.Item href="/screenings">Programación</Dropdown.Item>}
@@ -65,15 +73,15 @@ const TopBar = ({ user, onLogin, onLogout }) => {
                 </Dropdown.Menu>
               </Dropdown>
             ) : (
-              <Nav.Link onClick={handleShow}>
+              <Nav.Link onClick={handleShowLogin}>
                 <FontAwesomeIcon icon={faUser} />
               </Nav.Link>
             )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-
-      <Modal show={show} onHide={handleClose}>
+      
+      <Modal show={showLogin} onHide={handleCloseLogin}>
         <Modal.Header closeButton>
           <Modal.Title>Iniciar Sesión</Modal.Title>
         </Modal.Header>
@@ -105,10 +113,23 @@ const TopBar = ({ user, onLogin, onLogout }) => {
             <Button variant="primary" type="submit">
               Iniciar Sesión
             </Button>
+            <Button variant="secondary" type="reset" onClick={handleShowRegister}>
+              Registrarse
+            </Button>
           </Form>
         </Modal.Body>
       </Modal>
+
+      <Modal show={showRegister} onHide={handleCloseRegister}>
+        <Modal.Header closeButton>
+          <Modal.Title>Registrarse</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <RegisterForm/>
+        </Modal.Body>
+      </Modal>
     </>
+    </div>
   );
 };
 

@@ -15,12 +15,14 @@ import ScreeningsList from './components/ScreeningsList';
 import AddScreeningForm from './components/AddScreeningForm';
 import DropdownFunciones from './components/ScreeningSelector';
 import TopBar from './components/Topbar';
-
-import './App.css';
 import PrivateRoute from './components/PrivateRoute';
 import ScreenList from './components/ScreenList';
 import AddScreenForm from './components/AddScreenForm';
 import EditScreenForm from './components/EditScreenForm';
+import Footer from './components/Footer';
+import HomePage from './components/HomePage';
+
+import './App.css';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -65,112 +67,10 @@ function App() {
   return (
     <div className="App">
       <TopBar user={user} onLogin={handleLogin} onLogout={handleLogout}/>
-
-      <Router>
-        <Routes>
-          <Route path="/" element={<MoviePage />} />
-          <Route path="/movies/:id" element={<MovieDetails/>} />
-          
-          <Route 
-            path="/movies/register" 
-            element={
-              <PrivateRoute>
-                <MovieForm/>
-              </PrivateRoute>
-              }
-          />
-
-          <Route 
-            path="/movies" 
-            element={
-              <PrivateRoute>
-                <MovieList/>
-              </PrivateRoute>}
-          />
-
-          <Route 
-            path="/movies/:id/edit" 
-            element={
-              <PrivateRoute>
-                <MovieEditForm/>
-              </PrivateRoute>}
-          />
-
-          <Route 
-            path="/users/:id/edit" 
-            element={
-              <PrivateRoute>
-                <UserEditForm/>
-              </PrivateRoute>}
-          />
-
-          <Route 
-            path="/users/:id" 
-            element={
-              <PrivateRoute>
-                <UserCard/>
-              </PrivateRoute>}
-          />
-
-          <Route 
-            path="/users" 
-            element={
-              <PrivateRoute>
-                <UserPage />
-              </PrivateRoute>} 
-          />
-          <Route 
-            path="/users/register"
-            element={
-              <PrivateRoute>
-                <RegisterForm/>
-              </PrivateRoute>
-            } 
-          />
-
-          <Route path="/reserve/:id" element={<DropdownFunciones/>} />
-
-          <Route 
-            path="/screenings" 
-            element={
-            <PrivateRoute>
-              {<ScreeningsList/>}
-            </PrivateRoute>
-          }/>
-
-          <Route 
-            path="/screenings/add" 
-            element={
-            <PrivateRoute>
-              {<AddScreeningForm/>}
-            </PrivateRoute>
-          }/>
-
-          <Route 
-            path="/screens" 
-            element={
-            <PrivateRoute>
-              {<ScreenList/>}
-            </PrivateRoute>
-          }/>
-
-          <Route 
-            path="/screens/add" 
-            element={
-            <PrivateRoute>
-              {<AddScreenForm/>}
-            </PrivateRoute>
-          }/>
-
-          <Route 
-            path="/screens/:id/edit" 
-            element={
-            <PrivateRoute>
-              {<EditScreenForm/>}
-            </PrivateRoute>
-          }/>
-        </Routes>
-      </Router>
+      <div className='content'>
+        <HomePage/>
+      </div>
+      <Footer/>
     </div>
   );
 }

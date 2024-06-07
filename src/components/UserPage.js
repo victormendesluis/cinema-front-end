@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
 
 const UserPage = () => {
   const [users, setUsers] = useState([]);
@@ -53,36 +54,39 @@ const UserPage = () => {
     <div>
       <h1>Lista de Usuarios</h1>
       {loading ? (
-        <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
+        <div>
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </Spinner>
         </div>
       ) : (
-        <table className="table table-striped">
-          <thead className="thead-dark">
-            <tr>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map(user => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  <button className="btn btn-primary mr-2" onClick={() => handleEdit(user)}>Editar</button>
-                  <button className="btn btn-danger" onClick={() => handleDelete(user)}>Borrar</button>
-                </td>
+        <div>
+          <table className="table table-striped">
+            <thead className="thead-dark">
+              <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map(user => (
+                <tr key={user.id}>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>
+                    <button className="btn btn-primary mr-2" onClick={() => handleEdit(user)}>Editar</button>
+                    <button className="btn btn-danger" onClick={() => handleDelete(user)}>Borrar</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Usuario</button>
+          <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+        </div>
       )}
-      <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Usuario</button>
-      <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+
     </div>
   );
 };

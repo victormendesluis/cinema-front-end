@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
 
 const MovieList = () => {
-    
+  const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchMovies();
+    setLoading(false);
   }, []);
 
   const fetchMovies = () => {
@@ -49,31 +51,42 @@ const MovieList = () => {
 
   return (
     <div>
-        <table className="table table-striped">
-        <thead className="thead-dark">
-            <tr>
-            <th>Titulo</th>
-            <th>Director</th>
-            <th>Año</th>
-            <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {movies.map(movie => (
-            <tr key={movie.id}>
-                <td>{movie.title}</td>
-                <td>{movie.directors}</td>
-                <td>{movie.release}</td>
-                <td>
-                <button className="btn btn-primary mr-2" onClick={() => handleEdit(movie)}>Editar</button>
-                <button className="btn btn-danger" onClick={() => handleDelete(movie.id)}>Borrar</button>
-                </td>
-            </tr>
-            ))}
-        </tbody>
-        </table>
-        <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Película</button>
-        <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+      {loading ? (
+        <div>
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Cargando...</span>
+          </Spinner>
+        </div>
+      ) : (
+        <div>
+          <h2>Todas las películas</h2>
+          <table className="table table-striped">
+          <thead className="thead-dark">
+              <tr>
+              <th>Titulo</th>
+              <th>Director</th>
+              <th>Año</th>
+              <th>Acciones</th>
+              </tr>
+          </thead>
+          <tbody>
+              {movies.map(movie => (
+              <tr key={movie.id}>
+                  <td>{movie.title}</td>
+                  <td>{movie.directors}</td>
+                  <td>{movie.release}</td>
+                  <td>
+                  <button className="btn btn-primary mr-2" onClick={() => handleEdit(movie)}>Editar</button>
+                  <button className="btn btn-danger" onClick={() => handleDelete(movie.id)}>Borrar</button>
+                  </td>
+              </tr>
+              ))}
+          </tbody>
+          </table>
+          <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Película</button>
+          <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+      </div>
+    )}
     </div>
   );
 };
