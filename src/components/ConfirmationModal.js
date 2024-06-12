@@ -1,19 +1,21 @@
 import React from 'react';
-import '../style/modal.css';
+import { Modal, Button } from 'react-bootstrap';
 
 const ConfirmationModal = ({ show, onClose }) => {
-  if (!show) {
-    return null;
-  }
-
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <h2>Reserva Confirmada</h2>
+    <Modal show={show} onHide={onClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Reserva Confirmada</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
         <p>¡Gracias por su reserva! Será redirigido en breve...</p>
-        <button onClick={onClose}>Cerrar</button>
-      </div>
-    </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={onClose}>
+          Cerrar
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 };
 

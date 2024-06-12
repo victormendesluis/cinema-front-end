@@ -1,0 +1,15 @@
+th {
+  cursor: pointer;
+}
+  
+th.ascending::after {
+  content: ' ▲';
+}
+  
+th.descending::after {
+  content: ' ▼';
+}
+  
+.container button{
+  margin: 1%;
+}

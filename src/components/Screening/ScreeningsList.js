@@ -2,6 +2,9 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
+import '../../style/elementsTable.css';
+import DeleteConfirmationModal from './ScreeningDeleteConfirmationModal';
+import SuccessModal from './ScreeningDeletedSuccessModal';
 
 
 const ScreeningsList = () => {
@@ -9,29 +12,30 @@ const ScreeningsList = () => {
   const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [screeningToDelete, setScreeningToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simular fetch a la API para obtener todas las funciones
-    // Reemplaza esto con tu llamada real a la API
-    const fetchAllScreenings = async () => {
-      try {
-        const response = await fetch('/screenings');
-        if (response.ok) {
-          const data = await response.json();
-          setScreenings(data);
-          setLoading(false);
-        } else {
-          console.error('Error al obtener las funciones.');
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error('Error al obtener las funciones:', error);
-      }
-    };
-
     fetchAllScreenings();
   }, []);
+
+  const fetchAllScreenings = async () => {
+    try {
+      const response = await fetch('/screenings');
+      if (response.ok) {
+        const data = await response.json();
+        setScreenings(data);
+        setLoading(false);
+      } else {
+        console.error('Error al obtener las funciones.');
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error al obtener las funciones:', error);
+    }
+  };
 
   const sortedScreenings = useMemo(() => {
     let sortableScreenings = [...screenings];
@@ -81,6 +85,27 @@ const ScreeningsList = () => {
     navigate(`/screenings/${id}/edit`);
   };
 
+  const handleDelete = (screening) => {
+    setScreeningToDelete(screening);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    fetch(`/movies/${screeningToDelete.id}`, {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.ok) {
+          setShowDeleteModal(false);
+          setShowSuccessModal(true);
+          fetchAllScreenings();
+        } else {
+          console.error('Error al borrar la función');
+        }
+      })
+      .catch(error => console.error('Error al borrar la función:', error));
+  };
+
   return (
     <div>
       {loading ? (
@@ -123,16 +148,27 @@ const ScreeningsList = () => {
                   <td>{screening.audio}</td>
                   <td>{screening.price}</td>
                   <td><button className="btn btn-primary mr-2" onClick={()=>handleEditClick(screening.id)}>Editar</button></td>
+                  <td><button className="btn btn-danger mr-2" onClick={()=>handleDelete(screening)}>Borrar</button></td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <div>
+          <div className='container'>
             <button className="btn btn-primary mb-3" onClick={handleAddClick}>Añadir Sesión</button>
             <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
           </div>
         </div>
       )}
+      <DeleteConfirmationModal
+        show={showDeleteModal}
+        handleClose={() => setShowDeleteModal(false)}
+        handleConfirm={confirmDelete}
+      />
+
+      <SuccessModal
+        show={showSuccessModal}
+        handleClose={() => setShowSuccessModal(false)}
+      />
     </div>
   );
 };

@@ -5,6 +5,7 @@
   border-radius: 1%;
   border-width: 1in;
   margin: 1%;
+  height: 100%;
 }
 
 .movie-card:hover {

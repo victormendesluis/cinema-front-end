@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import '../style/form.css';
 import RegisterModal from './RegisterModal';
 
-function RegisterForm() {
-  // State para almacenar los valores del formulario
+const RegisterForm = ()=> {
+  //const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    id: 0,
     name: '',
     surname: '',
     email: '',
@@ -33,8 +32,7 @@ function RegisterForm() {
 
   // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    //console.log(formData);
+    e.preventDefault();;
     try {
       if(formData.password===formData.confirmPassword){
         const response = await fetch('/register', {
@@ -45,9 +43,8 @@ function RegisterForm() {
           body: JSON.stringify(formData),
         });
         const data = await response.json();
-        //console.log(data);
         setShowModal(true);
-        Navigate('/');
+        setTimeout(() => Navigate('/'), 5000);
       }else{
         alert('Las contraseñas no coinciden.')
       }

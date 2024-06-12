@@ -19,6 +19,7 @@ import EditScreenForm from './Screen/EditScreenForm';
 import EditScreeningForm from './Screening/EditScreeningForm';
 import UserTable from './User/UserTable';
 import TicketValidation from './TicketValidation';
+import UserPage from './User/UserPage';
 
 function HomePage() {
   return (
@@ -64,17 +65,14 @@ function HomePage() {
 
           <Route 
             path="/profile" 
-            element={
-              <PrivateRoute>
-                <UserCard/>
-              </PrivateRoute>}
+            element={<UserCard/>}
           />
 
           <Route 
             path="/users" 
             element={
               <PrivateRoute>
-                <UserTable />
+                <UserPage />
               </PrivateRoute>} 
           />
           <Route 

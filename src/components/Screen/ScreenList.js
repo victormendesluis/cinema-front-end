@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
+import '../../style/elementsTable.css';
 
 const ScreenList = () => {
   const [screens, setScreens] = useState([]);
@@ -111,7 +112,7 @@ const ScreenList = () => {
             ))}
           </tbody>
         </table>
-        <div>
+        <div className='container'>
           <button className="btn btn-primary mb-3" onClick={handleAddClick}>Añadir Sala</button>
           <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
         </div>

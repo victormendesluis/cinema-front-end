@@ -1,101 +1,119 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BookingModal from './BookingModal'; // Importa el nuevo componente modal
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 
-const TicketValidation=()=>{
-    const [formData, setFormData] = useState({
-        identifier: '',
-        file: '',
-      });
-    const navigate = useNavigate();
-    
-    // Función para manejar cambios en los campos del formulario
-    const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    };
-    
-    const handleSubmit = async (e) => {
-      e.preventDefault();
+const TicketValidation = () => {
+  const [formData, setFormData] = useState({
+    identifier: '',
+    file: null,
+  });
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [bookingData, setBookingData] = useState(null);
+  const navigate = useNavigate();
 
-      var endpoint="";
-      var body="";
-      if(formData.qr_code===''){
-        endpoint='bookings/validate'
-        body=formData.ticket;
-        try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            console.log('DATA',data);
-          } else {
-            console.log('Ha ocurrido un error');
-          }
-        } catch (error) {
-          console.error('Error al validar el ticket', error);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      file: e.target.files[0],
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (formData.file) {
+      const formDataToSend = new FormData();
+      formDataToSend.append('file', formData.file);
+      try {
+        const response = await fetch('/bookings/decodeQR/validate', {
+          method: 'POST',
+          body: formDataToSend,
+        });
+        const data = await response.json();
+        if (response.ok) {
+          console.log('BOOKING', data);
+          setBookingData(data);
+          setModalIsOpen(true);
+        } else {
+          console.log('Ha ocurrido un error');
         }
-      }else{
-        endpoint='bookings/decodeQR/validate'
-        const formDataToSend = new FormData();
-        formDataToSend.append('file', formData.file);
-        try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            body: formDataToSend,
-          });
-          const data = await response.json();
-          if (response.ok) {
-            console.log('DATA',data);
-          } else {
-            console.log('Ha ocurrido un error');
-          }
-        } catch (error) {
-          console.error('Error al validar el ticket', error);
-        }
+      } catch (error) {
+        console.error('Error al validar el ticket', error);
       }
-    };
+    } else {
+      const body = { identifier: formData.ticket };
+      try {
+        const response = await fetch('/bookings/validate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(body),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          console.log('BOOKING', data);
+          setBookingData(data);
+          setModalIsOpen(true);
+        } else {
+          console.log('Ha ocurrido un error');
+        }
+      } catch (error) {
+        console.error('Error al validar el ticket', error);
+      }
+    }
+  };
 
-    const handleBackClick = () => {
-      navigate(`/`);
-    };
+  const closeModal = () => {
+    setModalIsOpen(false);
+    navigate(`/`);
+  };
 
-    return (
-        <div className="login-container"> {/* Aplicar la clase CSS login-container */}
-          <form onSubmit={handleSubmit}>
-            <div className="form-group"> {/* Aplicar la clase CSS form-group */}
-              <label htmlFor="ticket">Introduce tu Código</label>
-              <input
-                className="form-input" // Aplicar la clase CSS form-input
-                type="text"
-                id="ticket"
-                name="ticket"
-                value={formData.ticket}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group"> {/* Aplicar la clase CSS form-group */}
-              <label htmlFor="file">o Escanea tu QR</label>
-              <input
-                className="form-input" // Aplicar la clase CSS form-input
-                type="file"
-                id="file"
-                name="file"
-                value={formData.qr_code}
-                onChange={handleChange}
-              />
-            </div>
-            <button className="login-button" type="submit">Validar Ticket</button>
-            <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
-          </form>
+  return (
+    <div className="login-container">
+      <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="ticket">Introduce tu Código</label>
+          <input
+            className="form-input"
+            type="text"
+            id="ticket"
+            name="ticket"
+            value={formData.ticket}
+            onChange={handleChange}
+          />
         </div>
-      );
-}
+        <div className="form-group">
+          <label htmlFor="file">o Escanea tu QR</label>
+          <input
+            className="form-input"
+            type="file"
+            id="file"
+            name="file"
+            onChange={handleFileChange}
+          />
+        </div>
+        <button className="login-button btn btn-primary" type="submit">Validar Ticket</button>
+        <button className="btn btn-secondary mb-3" onClick={() => navigate(`/`)}>Atrás</button>
+      </form>
+
+      <BookingModal
+        show={modalIsOpen}
+        handleClose={closeModal}
+        bookingData={bookingData}
+      />
+    </div>
+  );
+};
+
 export default TicketValidation;

@@ -3,7 +3,7 @@ import { Table, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 
-import '../../style/usertable.css'
+import '../../style/elementsTable.css';
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -123,6 +123,7 @@ const UserTable = () => {
                     <span className={getClassNamesFor('email')}></span>
                     </th>
                     <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -131,15 +132,19 @@ const UserTable = () => {
                         <td>{user.name}</td>
                         <td>{user.email}</td>
                         <td>
-                            <button className="btn btn-primary mr-2" onClick={() => handleEdit(user)}>Editar</button>
-                            <button className="btn btn-danger" onClick={() => handleDelete(user)}>Borrar</button>
+                          <button className="btn btn-primary mr-2" onClick={() => handleEdit(user)}>Editar</button>
+                        </td>
+                        <td>
+                          <button className="btn btn-danger" onClick={() => handleDelete(user)}>Borrar</button>
                         </td>
                     </tr>
                 ))}
                 </tbody>
             </Table>
-            <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Usuario</button>
-            <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+            <div className='container'>
+              <button className="btn btn-primary mb-3" onClick={handleInsertClick}>Añadir Usuario</button>
+              <button className="btn btn-secondary mb-3" onClick={handleBackClick}>Atrás</button>
+            </div>
       </div>
         )}
     </div>

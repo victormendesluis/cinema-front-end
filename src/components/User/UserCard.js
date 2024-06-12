@@ -21,7 +21,6 @@ function UserCard() {
           throw new Error(`Error: ${response.statusText}`);
         }
         const data = await response.json();
-        //console.log('USUARIO', data);
         setFormData(data);
       } catch (error) {
         console.log(error)
@@ -136,11 +135,13 @@ function UserCard() {
             disabled
           />
         </div>
-        <button onClick={handleEdit} type='button'>Editar perfil</button>
-        {isEditable && (
-            <button type="submit">Guardar cambios</button>
-          )}
+        <div className='container'>
+          <button onClick={handleEdit} type='button'>Editar perfil</button>
+          {isEditable && (
+              <button type="submit">Guardar cambios</button>
+            )}
           <button type='button' onClick={handleBack}>Atrás</button>
+        </div>
       </form>
       </div>
     </div>

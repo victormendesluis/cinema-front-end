@@ -101,7 +101,8 @@ const AddScreeningForm = () => {
         alert('Proyección añadida exitosamente.');
         navigate('/');
       } else {
-        alert('Error al añadir la proyección.');
+        console.log(response);
+        alert('Error al añadir la proyección.', response);
       }
     } catch (error) {
       console.error('Error:', error);

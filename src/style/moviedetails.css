@@ -26,21 +26,6 @@
     font-size: 16px;
   }
   
-  .trailer-link {
-    display: block;
-    text-align: center;
-    margin: 20px 0;
-    padding: 10px;
-    background-color: #007BFF;
-    color: #fff;
-    border-radius: 4px;
-    text-decoration: none;
-  }
-  
-  .trailer-link:hover {
-    background-color: #0056b3;
-  }
-  
   .back-button {
     display: block;
     width: 100%;

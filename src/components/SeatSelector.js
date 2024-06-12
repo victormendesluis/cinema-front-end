@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import '../style/seatselector.css';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from './ConfirmationModal';
@@ -15,7 +15,7 @@ function SeatSelection({ seats, screeningId }) {
     expiryDate: '',
     cvv: ''
   });
-  const [showModal, setShowModal]=useState(false);
+  const [showModal, setShowModal] = useState(false);  // Estado para mostrar el modal
   const navigate = useNavigate();
 
   const handleSeatClick = (seat) => {
@@ -97,7 +97,7 @@ function SeatSelection({ seats, screeningId }) {
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`/screenings/ticket/buyNoSecurity`, { // Reemplaza con tu endpoint de API
+      const response = await fetch(`/screenings/ticket/buyNoSecurity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,13 +108,9 @@ function SeatSelection({ seats, screeningId }) {
           userIdentifier: userIdentifier,
         }),
       });
-      console.log(response);
       if (response.ok) {
-        setShowModal(true);
-        setTimeout(() => {
-          setShowModal(false);
-          navigate('/')
-        }, 3000);
+        setShowModal(true);  // Mostrar el modal de confirmación
+        setTimeout(() => navigate('/'), 5000); // Redirigir después de 3 segundos
       } else {
         alert('Error al reservar asientos.');
       }
@@ -133,16 +129,15 @@ function SeatSelection({ seats, screeningId }) {
       <h2>Eliga sus asientos</h2>
       <div className="seat-grid">{renderSeats()}</div>
       <div>
-      {!showPaymentForm && (
-        <button type="button" className="btn btn-primary" onClick={handleReserveClick}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-ticket-detailed-fill" viewBox="0 0 16 16">
-            <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1"/>
-          </svg>
-          Reservar
-        </button>
-      )}
+        {!showPaymentForm && (
+          <button type="button" className="btn btn-primary" onClick={handleReserveClick}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-ticket-detailed-fill" viewBox="0 0 16 16">
+              <path d="M0 4.5A1.5 1.5 0 0 1 1.5 3h13A1.5 1.5 0 0 1 16 4.5V6a.5.5 0 0 1-.5.5 1.5 1.5 0 0 0 0 3 .5.5 0 0 1 .5.5v1.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 11.5V10a.5.5 0 0 1 .5-.5 1.5 1.5 0 1 0 0-3A.5.5 0 0 1 0 6zm4 1a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5m0 5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5M4 8a1 1 0 0 0 1 1h6a1 1 0 1 0 0-2H5a1 1 0 0 0-1 1"/>
+            </svg>
+            Reservar
+          </button>
+        )}
       </div>
-
 
       {showPaymentForm && (
         <div className="payment-modal">
@@ -171,7 +166,7 @@ function SeatSelection({ seats, screeningId }) {
           </form>
         </div>
       )}
-      <ConfirmationModal show={showModal} onClose={() => setShowModal(false)} />
+      <ConfirmationModal show={showModal} onClose={() => setShowModal(false)} />  {/* Modal de confirmación */}
     </div>
   );
 }

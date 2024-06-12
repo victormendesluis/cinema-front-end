@@ -7,6 +7,7 @@ import '../../style/moviepage.css'; // Asegúrate de tener este archivo para los
 
 const MoviePage = () => {
   const [movies, setMovies] = useState([]);
+  const [releases, setReleases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -29,7 +30,24 @@ const MoviePage = () => {
       }
     };
 
+    const fetchReleases = async () => {
+      try {
+        const response = await fetch('/movies/releases'); // Ajusta la URL según tu API
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        
+        setReleases(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
     fetchMovies();
+    fetchReleases();
   }, []);
 
   const handleClick = (id) => {
@@ -44,7 +62,7 @@ const MoviePage = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div>
+    <div className='container'>
       {loading ? (
         <div>
           <Spinner animation="border" role="status">
@@ -52,17 +70,16 @@ const MoviePage = () => {
           </Spinner>
         </div>
       ) : (
-        <div>
-          <h2>Estrenos</h2>
+        <div className='container'>
           <Carousel>
-          {movies.map(movie => (
+          {releases.map(movie => (
             <Carousel.Item interval={2000}>
               <div className='text-center'>
                 <img 
                   key={movie.id}
                   src={'/uploads/release-'+movie.image}
                   alt={movie.title}
-                  className="d-block"
+                  className="d-block w-100"
                   style={{ cursor: 'pointer' }}
                   onClick={() => handleClick(movie.id)}
                 />
