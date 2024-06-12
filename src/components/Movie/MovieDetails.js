@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 import '../../style/moviedetails.css';
+import ReviewsList from '../ReviewsList';
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -10,6 +11,7 @@ const MovieDetails = () => {
   const [reviewData, setReviewData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showReview, setShowReviews]=useState(false);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -33,19 +35,17 @@ const MovieDetails = () => {
 
   const fetchMovieReviews=async ()=>{
     try{
-      const response = await fetch(`/movies/${id}/reviews/averageRating`);
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+      const response = await fetch(`/movie/${id}/reviews/averageRating`);
+      if (response.ok) {
+        const data = await response.json();
+        setReviewData(data.averageRating);
+        setLoading(false);
       }
-      const data = await response.json();
-      setReviewData(data);
-      setLoading(false);
     }catch(error){
       setError(error.message);
       setLoading(false);
     }
-
-  }
+  };
 
   const handleBackClick = () => {
     navigate('/');
@@ -58,7 +58,7 @@ const MovieDetails = () => {
   }
 
   const handleReviewsClick = ()=>{
-
+    setShowReviews(true);
   }
 
   if (loading) {
@@ -82,7 +82,7 @@ const MovieDetails = () => {
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           ></iframe>
-          <button type='button' onClick={handleReviewsClick}>Ver opiniones</button>
+          {localStorage.getItem('token')&&<button type='button' onClick={handleReviewsClick}>Ver opiniones</button>}
         </div>
         <div className='col'>
           <p className='movie-p'><strong>Título Original: </strong> {formData.origTitle}</p>
@@ -97,13 +97,14 @@ const MovieDetails = () => {
           <p className='movie-p'><strong>Versión en Español: </strong> {formData.spanishVersion ? 'Sí' : 'No'}</p>
           <p className='movie-p'><strong>Clasificación por Edad: </strong> {formData.ageRating}</p>
           <p className='movie-p'><strong>Duración: </strong> {formData.duration} minutos</p>
-          <p className='movie-p'><strong>Rating: </strong>{reviewData}</p>
+          {reviewData&&<p className='movie-p'><strong>Rating: </strong>{reviewData}</p>}
           <div>
-            <button onClick={handleReserveClick} className="back-button">Reservar</button>
+            {localStorage.getItem('token')&&<button onClick={handleReserveClick} className="back-button">Reservar</button>}
             <button onClick={handleBackClick} className="back-button">Volver</button>
           </div>
         </div>
       </div>
+      {showReview&&<ReviewsList movie={formData}/>}
     </div>
 
   );

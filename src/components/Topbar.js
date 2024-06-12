@@ -103,7 +103,7 @@ const TopBar = ({ user, onLogin, onLogout }) => {
     <div className='topbar'>
     <>
       <Navbar className='justify-content-between' bg="dark" variant='dark' expand="lg">
-        <Navbar.Brand href="/">Filmmes</Navbar.Brand>
+        <Navbar.Brand href="/"><img src="logo.jpg" width={50}></img>FilMM</Navbar.Brand>
         {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />*/}
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="ml-auto">

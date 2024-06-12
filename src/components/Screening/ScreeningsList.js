@@ -146,8 +146,8 @@ const ScreeningsList = () => {
                   <td>{screening.dayFromStartTime}</td>
                   <td>{screening.timeFromStarTime}</td>
                   <td>{screening.audio}</td>
-                  <td>{screening.price}</td>
-                  <td><button className="btn btn-primary mr-2" onClick={()=>handleEditClick(screening.id)}>Editar</button></td>
+                  <td>{screening.price}€</td>
+                  {/*<td><button className="btn btn-primary mr-2" onClick={()=>handleEditClick(screening.id)}>Editar</button></td>*/}
                   <td><button className="btn btn-danger mr-2" onClick={()=>handleDelete(screening)}>Borrar</button></td>
                 </tr>
               ))}

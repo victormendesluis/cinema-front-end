@@ -135,7 +135,7 @@ const MovieList = () => {
                     <button className="btn btn-primary mr-2" onClick={() => handleEdit(movie)}>Editar</button>
                   </td>
                   <td>
-                    <button className="btn btn-danger" onClick={() => handleDelete(movie.id)}>Borrar</button>
+                    <button className="btn btn-danger" onClick={() => handleDelete(movie)}>Borrar</button>
                   </td>
               </tr>
               ))}

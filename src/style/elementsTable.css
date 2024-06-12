@@ -3,11 +3,11 @@ th {
 }
   
 th.ascending::after {
-  content: ' ▲';
+  content: '▲';
 }
   
 th.descending::after {
-  content: ' ▼';
+  content: '▼';
 }
   
 .container button{

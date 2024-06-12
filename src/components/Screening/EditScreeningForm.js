@@ -5,20 +5,46 @@ import '../../style/form.css';  // Importar el archivo CSS
 const EditScreeningForm = () => {
   const{ id } = useParams();
   const [formData, setFormData] = useState({
-    cinemaName: 'FilMM',
-    screen: '',
-    movieTitle: '',
-    screeningDayAndHourDTO: {
-      screeningDay: '',
-      screeningStartTime: '',
+    id: 0,
+    movie: {
+      id: 0,
+      title: "",
+      origTitle: "",
+      release: "",
+      genres: "",
+      actors: "",
+      directors: "",
+      script: "",
+      producers: "",
+      synopsis: "",
+      originalVersion: true,
+      spanishVersion: true,
+      image: "",
+      trailer: "",
+      ageRating: "",
+      duration: 0
     },
-    audio: '',
-    price: '',
+    screen: {
+      id: 0,
+      cinema: {
+        id: 0,
+        name: "",
+        address: "",
+        phone: "",
+        email: ""
+      },
+      supports: ""
+    },
+    start_time: "",
+    audio: "",
+    price: 0,
+    endTime: "",
+    dayFromStartTime: "",
+    timeFromStarTime: ""
   });
 
   const [movies, setMovies] = useState([]);
   const [screens, setScreens] = useState([]);
-  const [screening, setScreening] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,8 +53,8 @@ const EditScreeningForm = () => {
           const response = await fetch(`/screenings/${id}`);
           if (response.ok) {
             const data = await response.json();
-            setScreening(data);
             setFormData(data);
+            console.log('SCREENING', data);
           } else {
             console.error('Error al obtener las funciones.');
           }
@@ -43,7 +69,7 @@ const EditScreeningForm = () => {
         if (response.ok) {
           const data = await response.json();
           setMovies(data);
-          //console.log('PELICULAS', data);
+          console.log('PELICULAS', data);
         } else {
           console.error('Error al obtener las películas.');
         }
@@ -58,7 +84,7 @@ const EditScreeningForm = () => {
         if (response.ok) {
           const data = await response.json();
           setScreens(data);
-          //console.log('SALAS',screens);
+          console.log('SALAS',screens);
         } else {
           console.error('Error al obtener las salas.');
         }
@@ -98,8 +124,9 @@ const EditScreeningForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      formData.screeningDayAndHourDTO.screeningDay=formatDateString(formData.screeningDayAndHourDTO.screeningDay);
-      const response = await fetch('/screenings', {
+      //console.log('DATA', formData);
+      //formData.screen.screeningDayAndHourDTO.screeningDay=formatDateString(formData.screen.screeningDayAndHourDTO.screeningDay);
+      const response = await fetch(`/screening/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -107,7 +134,7 @@ const EditScreeningForm = () => {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        alert('Proyección añadida exitosamente.');
+        alert('Proyección modificada exitosamente.');
         navigate('/');
       } else {
         alert('Error al añadir la proyección.');
@@ -162,7 +189,7 @@ const EditScreeningForm = () => {
           <label>Día de la proyección:</label>
           <input
             type="date"
-            name="screeningDay"
+            name="dayFromStartTime"
             value={formData.dayFromStartTime}
             onChange={handleChange}
             required
@@ -172,7 +199,7 @@ const EditScreeningForm = () => {
           <label>Hora de inicio de la proyección:</label>
           <input
             type="time"
-            name="screeningStartTime"
+            name="timeFromStarTime"
             value={formData.timeFromStarTime}
             onChange={handleChange}
             required

@@ -1,6 +1,7 @@
 .movie-list {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
   }
   
   .movie-card {
@@ -18,8 +19,8 @@
   }
   
   .movie-card img {
-    width: 300px;
-    height: 350px;
+    width: 275px;
+    height: 325px;
     object-fit: cover;
     border-radius: 5px;
   }

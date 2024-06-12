@@ -27,7 +27,7 @@ function App() {
     localStorage.removeItem('logged');
     localStorage.removeItem('admin');
     setUser(null);
-    return <Navigate to="/" />;
+    return <Navigate to="/"/>;
   };
 
   const getUsuario = async () => {
