@@ -7,7 +7,6 @@ function MovieForm() {
   const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
-    id: 0,
     title: '',
     origTitle: '',
     release: '',
@@ -19,7 +18,8 @@ function MovieForm() {
     synopsis: '',
     originalVersion: false,
     spanishVersion: true,
-    image: null,
+    releaseFile: null,
+    coverFile: null,
     trailer: '',
     ageRating: '',
     duration: 0,
@@ -35,9 +35,10 @@ function MovieForm() {
   };
 
   const handleFileChange = (e) => {
+    const { name, files } = e.target;
     setFormData({
       ...formData,
-      image: e.target.files[0]
+      [name]: files[0]
     });
   };
 
@@ -55,24 +56,47 @@ function MovieForm() {
     console.log('PELICULA', JSON.stringify(formData));
 
     const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (key === 'image') {
-        formDataToSend.append(key, formData[key], formData[key].name);
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
-    });
+    const movieData = {
+      title: formData.title,
+      origTitle: formData.origTitle,
+      release: formData.release,
+      genres: formData.genres,
+      actors: formData.actors,
+      directors: formData.directors,
+      script: formData.script,
+      producers: formData.producers,
+      synopsis: formData.synopsis,
+      originalVersion: formData.originalVersion,
+      spanishVersion: formData.spanishVersion,
+      image: formData.releaseFile.name,
+      trailer: formData.trailer,
+      ageRating: formData.ageRating,
+      duration: formData.duration,
+      url: formData.url
+    };
+
+    formDataToSend.append('movie', new Blob([JSON.stringify(movieData)], { type: 'application/json' }));
+
+    if (formData.releaseFile) {
+      formDataToSend.append('releaseFile', formData.releaseFile, formData.releaseFile.name);
+    }
+
+    if (formData.coverFile) {
+      formDataToSend.append('coverFile', formData.coverFile, formData.coverFile.name);
+    }
+
     try {
-      const response = await fetch('/movies', {
+      const response = await fetch('/uploadMovieAndImages', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: formDataToSend,
       });
-      const data = await response.json();
-      if(data){
-        console.log(data);
+
+      if(response.ok){
+        const data = await response.json();
+        if(data){
+          console.log(data);
+          navigate('/movies');
+        }
       }
     } catch (error) {
       console.log(error);
@@ -198,11 +222,20 @@ function MovieForm() {
         </label>
       </div>
       <div>
-        <label htmlFor="image">Imagen:</label>
+        <label htmlFor="releaseFile">Cartelera:</label>
         <input
           type="file"
-          id="image"
-          name="image"
+          id="releaseFile"
+          name="releaseFile"
+          onChange={handleFileChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="coverFile">Portada:</label>
+        <input
+          type="file"
+          id="coverFile"
+          name="coverFile"
           onChange={handleFileChange}
         />
       </div>

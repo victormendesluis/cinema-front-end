@@ -12,7 +12,7 @@ const DropdownFunciones = () => {
   useEffect(() => {
     const fetchFunciones = async () => {
       try {
-        const response = await fetch(`/screenings/week/available`); // /movie/${id}/screenings/week
+        const response = await fetch(`/movie/${id}/screenings/week`); // /movie/${id}/screenings/week /screenings/week/available
         if (response.ok) {
             const data=await response.json();
             setScreenings(data);
@@ -46,6 +46,17 @@ const DropdownFunciones = () => {
     navigate(`/movies/${id}`);
   };
 
+  const handleDateFormat=(start_time)=>{
+    const dateObject = new Date(start_time);
+
+    const date = dateObject.toLocaleDateString(); // Esto formatea la fecha según la configuración regional del navegador
+    const time = dateObject.toLocaleTimeString();
+
+    const message = `Día ${date}, a las ${time}`;
+
+    return message;
+  }
+
   return (
     <div>
       <label htmlFor="screenings">Seleccione una función:</label>
@@ -53,7 +64,7 @@ const DropdownFunciones = () => {
         <option value="" disabled>Seleccione una función</option>
         {screenings.map((screening) => (
           <option key={screening.id} value={screening.id}>
-            {screening.start_time}
+            {handleDateFormat(screening.start_time)}
           </option>
         ))}
       </select>

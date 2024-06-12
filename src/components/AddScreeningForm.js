@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../style/form.css';  // Importar el archivo CSS
+import { type } from '@testing-library/user-event/dist/type';
 
 const AddScreeningForm = () => {
   const [formData, setFormData] = useState({
-    cinemaName: 'CinemaMM',
+    cinemaName: 'FilMM',
     screen: 0,
     movieTitle: '',
     screeningDayAndHourDTO: {
@@ -12,7 +13,7 @@ const AddScreeningForm = () => {
       screeningStartTime: '',
     },
     audio: '',
-    screenPrice: 0,
+    screeningPrice: '',
   });
 
   const [movies, setMovies] = useState([]);
@@ -85,7 +86,11 @@ const AddScreeningForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      //console.log('PREFORMATEO', formData.screeningDayAndHourDTO.screeningDay);
       formData.screeningDayAndHourDTO.screeningDay=formatDateString(formData.screeningDayAndHourDTO.screeningDay);
+      //console.log('FECHA', formData.screeningDayAndHourDTO.screeningDay, typeof(formData.screeningDayAndHourDTO.screeningDay));
+      //console.log('HORAS', formData.screeningDayAndHourDTO.screeningStartTime, typeof(formData.screeningDayAndHourDTO.screeningStartTime));
+      //console.log('SCREENING', formData);
       const response = await fetch('/screenings', {
         method: 'POST',
         headers: {
@@ -179,8 +184,8 @@ const AddScreeningForm = () => {
           <label>Precio de la sala:</label>
           <input
             type="number"
-            name="screenPrice"
-            value={formData.screenPrice}
+            name="screeningPrice"
+            value={formData.screeningPrice}
             onChange={handleChange}
             required
           />

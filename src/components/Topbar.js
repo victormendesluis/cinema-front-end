@@ -64,11 +64,12 @@ const TopBar = ({ user, onLogin, onLogout }) => {
                   <FontAwesomeIcon icon={faUser} />
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                  <Dropdown.Item href={`/users/${user.id}`}>Perfil</Dropdown.Item>
+                  <Dropdown.Item href={`/profile`}>Perfil</Dropdown.Item>
                   {localStorage.getItem('admin') && <Dropdown.Item href="/movies">Películas</Dropdown.Item>}
                   {localStorage.getItem('admin') && <Dropdown.Item href="/users">Usuarios</Dropdown.Item>}
                   {localStorage.getItem('admin') && <Dropdown.Item href="/screenings">Programación</Dropdown.Item>}
                   {localStorage.getItem('admin') && <Dropdown.Item href="/screens">Salas</Dropdown.Item>}
+                  {localStorage.getItem('admin') && <Dropdown.Item href="/ticket">Validar Ticket</Dropdown.Item>}
                   <Dropdown.Item onClick={onLogout}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

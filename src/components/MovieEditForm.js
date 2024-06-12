@@ -7,7 +7,6 @@ function MovieEditForm() {
   const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
-    id: '',
     title: '',
     origTitle: '',
     release: '',
@@ -19,13 +18,12 @@ function MovieEditForm() {
     synopsis: '',
     originalVersion: false,
     spanishVersion: true,
-    image: '',
+    releaseFile: null,
+    coverFile: null,
     trailer: '',
     ageRating: '',
     duration: 0
   });
-  
-  //const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -53,19 +51,57 @@ function MovieEditForm() {
     });
   };
 
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    setFormData({
+      ...formData,
+      [name]: files[0]
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('PELICULA', JSON.stringify(formData));
+
+    const formDataToSend = new FormData();
+    const movieData = {
+      title: formData.title,
+      origTitle: formData.origTitle,
+      release: formData.release,
+      genres: formData.genres,
+      actors: formData.actors,
+      directors: formData.directors,
+      script: formData.script,
+      producers: formData.producers,
+      synopsis: formData.synopsis,
+      originalVersion: formData.originalVersion,
+      spanishVersion: formData.spanishVersion,
+      image: formData.releaseFile.name,
+      trailer: formData.trailer,
+      ageRating: formData.ageRating,
+      duration: formData.duration,
+      url: formData.url
+    };
+
+    formDataToSend.append('movie', new Blob([JSON.stringify(movieData)], { type: 'application/json' }));
+
+    if (formData.releaseFile) {
+      formDataToSend.append('releaseFile', formData.releaseFile, formData.releaseFile.name);
+    }
+
+    if (formData.coverFile) {
+      formDataToSend.append('coverFile', formData.coverFile, formData.coverFile.name);
+    }
+
     try {
       const response = await fetch(`/movies/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       });
       const data = await response.json();
       if(data){
         console.log(data);
+        navigate('/movies');
       }
     } catch (error) {
       console.log(error);
@@ -78,17 +114,6 @@ function MovieEditForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="id">ID:</label>
-        <input
-          type="text"
-          id="id"
-          name="id"
-          value={formData.id}
-          onChange={handleChange}
-          required
-        />
-      </div>
       <div>
         <label htmlFor="title">Título:</label>
         <input
@@ -202,13 +227,21 @@ function MovieEditForm() {
         </label>
       </div>
       <div>
-        <label htmlFor="image">URL de la Imagen:</label>
+      <label htmlFor="releaseFile">Cartelera:</label>
         <input
-          type="text"
-          id="image"
-          name="image"
-          value={formData.image}
-          onChange={handleChange}
+          type="file"
+          id="releaseFile"
+          name="releaseFile"
+          onChange={handleFileChange}
+        />
+      </div>
+      <div>
+        <label htmlFor="coverFile">Portada:</label>
+        <input
+          type="file"
+          id="coverFile"
+          name="coverFile"
+          onChange={handleFileChange}
         />
       </div>
       <div>

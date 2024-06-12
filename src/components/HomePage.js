@@ -8,7 +8,6 @@ import MovieDetails from './MovieDetails';
 import MovieEditForm from './MovieEditForm';
 import RegisterForm from './RegisterForm';
 import UserCard from './UserCard';
-import UserPage from './UserPage';
 import UserEditForm from './UserEditForm';
 import ScreeningsList from './ScreeningsList';
 import AddScreeningForm from './AddScreeningForm';
@@ -17,6 +16,9 @@ import PrivateRoute from './PrivateRoute';
 import ScreenList from './ScreenList';
 import AddScreenForm from './AddScreenForm';
 import EditScreenForm from './EditScreenForm';
+import EditScreeningForm from './EditScreeningForm';
+import UserTable from './UserTable';
+import TicketValidation from './TicketValidation';
 
 function HomePage() {
   return (
@@ -61,7 +63,7 @@ function HomePage() {
           />
 
           <Route 
-            path="/users/:id" 
+            path="/profile" 
             element={
               <PrivateRoute>
                 <UserCard/>
@@ -72,7 +74,7 @@ function HomePage() {
             path="/users" 
             element={
               <PrivateRoute>
-                <UserPage />
+                <UserTable />
               </PrivateRoute>} 
           />
           <Route 
@@ -91,6 +93,14 @@ function HomePage() {
             element={
             <PrivateRoute>
               {<ScreeningsList/>}
+            </PrivateRoute>
+          }/>
+
+          <Route 
+            path="/screenings/:id/edit" 
+            element={
+            <PrivateRoute>
+              {<EditScreeningForm/>}
             </PrivateRoute>
           }/>
 
@@ -123,6 +133,13 @@ function HomePage() {
             element={
             <PrivateRoute>
               {<EditScreenForm/>}
+            </PrivateRoute>
+          }/>
+          <Route 
+            path="/ticket" 
+            element={
+            <PrivateRoute>
+              {<TicketValidation/>}
             </PrivateRoute>
           }/>
         </Routes>

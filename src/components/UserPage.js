@@ -52,7 +52,6 @@ const UserPage = () => {
 
   return (
     <div>
-      <h1>Lista de Usuarios</h1>
       {loading ? (
         <div>
           <Spinner animation="border" role="status">
@@ -61,6 +60,7 @@ const UserPage = () => {
         </div>
       ) : (
         <div>
+          <h1>Lista de Usuarios</h1>
           <table className="table table-striped">
             <thead className="thead-dark">
               <tr>

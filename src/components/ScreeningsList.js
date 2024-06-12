@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Form } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 
 
 const ScreeningsList = () => {
   const [screenings, setScreenings] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -20,6 +23,7 @@ const ScreeningsList = () => {
           setLoading(false);
         } else {
           console.error('Error al obtener las funciones.');
+          setLoading(false);
         }
       } catch (error) {
         console.error('Error al obtener las funciones:', error);
@@ -28,6 +32,42 @@ const ScreeningsList = () => {
 
     fetchAllScreenings();
   }, []);
+
+  const sortedScreenings = useMemo(() => {
+    let sortableScreenings = [...screenings];
+    if (searchQuery) {
+      sortableScreenings = sortableScreenings.filter(screening =>
+        screening.movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (sortConfig !== null) {
+      sortableScreenings.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableScreenings;
+  }, [screenings, sortConfig, searchQuery]);
+
+  const requestSort = key => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getClassNamesFor = key => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === key ? sortConfig.direction : undefined;
+  };
 
   const handleBackClick = () => {
     navigate(`/`);
@@ -38,7 +78,7 @@ const ScreeningsList = () => {
   };
 
   const handleEditClick = (id) => {
-    navigate(`/screenings/${id}`);
+    navigate(`/screenings/${id}/edit`);
   };
 
   return (
@@ -52,6 +92,13 @@ const ScreeningsList = () => {
       ) : (
         <div>
           <h2>Todas las Funciones</h2>
+          <Form.Control
+                type="text"
+                placeholder="Buscar..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="mb-3"
+            />
           <table className="table table-striped">
             <thead className="thead-dark">
               <tr>
@@ -66,7 +113,7 @@ const ScreeningsList = () => {
               </tr>
             </thead>
             <tbody>
-              {screenings.map(screening => (
+              {sortedScreenings.map(screening => (
                 <tr key={screening.id}>
                   <td>{screening.screen.cinema.name}</td>
                   <td>{screening.screen.id}</td>

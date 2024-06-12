@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Form } from 'react-bootstrap';
 import Spinner from 'react-bootstrap/Spinner';
 
 const MovieList = () => {
   const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,6 +20,43 @@ const MovieList = () => {
       .then(response => response.json())
       .then(data => setMovies(data))
       .catch(error => console.error('Error fetching movies:', error));
+  };
+
+  const sortedMovies = useMemo(() => {
+    let sortableMovies = [...movies];
+    if (searchQuery) {
+      sortableMovies = sortableMovies.filter(movie =>
+        movie.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        movie.directors.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (sortConfig !== null) {
+      sortableMovies.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableMovies;
+  }, [movies, sortConfig, searchQuery]);
+
+  const requestSort = key => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getClassNamesFor = key => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === key ? sortConfig.direction : undefined;
   };
 
   const handleEdit = (movie) => {
@@ -60,17 +100,24 @@ const MovieList = () => {
       ) : (
         <div>
           <h2>Todas las películas</h2>
+          <Form.Control
+                type="text"
+                placeholder="Buscar..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="mb-3"
+          />
           <table className="table table-striped">
           <thead className="thead-dark">
               <tr>
-              <th>Titulo</th>
-              <th>Director</th>
+              <th onClick={() => requestSort('title')}>Titulo <span className={getClassNamesFor('title')}></span></th>
+              <th onClick={() => requestSort('directors')}>Director <span className={getClassNamesFor('directors')}></span></th>
               <th>Año</th>
-              <th>Acciones</th>
+              <th></th>
               </tr>
           </thead>
           <tbody>
-              {movies.map(movie => (
+              {sortedMovies.map(movie => (
               <tr key={movie.id}>
                   <td>{movie.title}</td>
                   <td>{movie.directors}</td>

@@ -30,7 +30,7 @@ function EditScreenForm() {
         const response = await fetch(`/screens/${id}`);
         if(response.ok){
             const data = await response.json();
-            //console.log(data);
+            console.log(data);
             setFormData(data);
         }
       } catch (error) {

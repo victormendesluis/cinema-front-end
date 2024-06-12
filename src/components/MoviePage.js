@@ -57,14 +57,16 @@ const MoviePage = () => {
           <Carousel>
           {movies.map(movie => (
             <Carousel.Item interval={2000}>
-            <img 
-              key={movie.id}
-              src={movie.image}
-              alt={movie.title}
-              className="d-block w-100"
-              style={{ cursor: 'pointer' }}
-              onClick={() => handleClick(movie.id)}
-            />
+              <div className='text-center'>
+                <img 
+                  key={movie.id}
+                  src={'/uploads/release-'+movie.image}
+                  alt={movie.title}
+                  className="d-block"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleClick(movie.id)}
+                />
+              </div>
             </Carousel.Item>
           ))}
           </Carousel>

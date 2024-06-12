@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 
 const ScreenList = () => {
   const [screens, setScreens] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'ascending' });
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,16 +29,48 @@ const ScreenList = () => {
     setLoading(false);
   }, []);
 
+  const sortedScreens = useMemo(() => {
+    let sortableScreens = [...screens];
+    if (searchQuery) {
+      sortableScreens = sortableScreens.filter(screen =>
+        screen.supports.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    if (sortConfig !== null) {
+      sortableScreens.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableScreens;
+  }, [screens, sortConfig, searchQuery]);
+
+  const requestSort = key => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getClassNamesFor = key => {
+    if (!sortConfig) {
+      return;
+    }
+    return sortConfig.key === key ? sortConfig.direction : undefined;
+  };
+
   const handleBackClick = () => {
     navigate(`/`);
   };
 
   const handleAddClick = () => {
     navigate(`/screens/add`);
-  };
-
-  const handleEditClick = (screen) => {
-    navigate(`/screens/${screen.id}/edit`);
   };
 
   return (
@@ -49,20 +84,29 @@ const ScreenList = () => {
       ) : (
       <div>
         <h2>Todas las Salas</h2>
+        <Form.Control
+                type="text"
+                placeholder="Buscar..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="mb-3"
+          />
         <table className="table table-striped">
           <thead className="thead-dark">
             <tr>
               <th>Cine</th>
-              <th>Sala</th>
-              <th></th>
+              <th onClick={() => requestSort('supports')} >
+                Sala<span className={getClassNamesFor('supports')}></span>
+              </th>
+              <th>Asientos</th>
             </tr>
           </thead>
           <tbody>
-            {screens.map(screen => (
+            {sortedScreens.map(screen => (
               <tr key={screen.id}>
-                <td>{screen.cinema.name}</td>
+                <td>{screen.cinemaName}</td>
                 <td>{screen.supports}</td>
-                <td><button className="btn btn-primary mr-2" onClick={()=>handleEditClick(screen)}>Editar</button></td>
+                <td>{screen.seats.length}</td>
               </tr>
             ))}
           </tbody>

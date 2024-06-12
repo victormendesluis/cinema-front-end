@@ -1,24 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 
-import MovieForm from './components/MovieForm';
-import MoviePage from './components/MoviePage';
-import MovieList from './components/MovieList';
-import MovieDetails from './components/MovieDetails';
-import MovieEditForm from './components/MovieEditForm';
-import RegisterForm from './components/RegisterForm';
-import UserCard from './components/UserCard';
-import UserPage from './components/UserPage';
-import UserEditForm from './components/UserEditForm';
-import ScreeningsList from './components/ScreeningsList';
-import AddScreeningForm from './components/AddScreeningForm';
-import DropdownFunciones from './components/ScreeningSelector';
 import TopBar from './components/Topbar';
-import PrivateRoute from './components/PrivateRoute';
-import ScreenList from './components/ScreenList';
-import AddScreenForm from './components/AddScreenForm';
-import EditScreenForm from './components/EditScreenForm';
 import Footer from './components/Footer';
 import HomePage from './components/HomePage';
 
@@ -67,9 +50,7 @@ function App() {
   return (
     <div className="App">
       <TopBar user={user} onLogin={handleLogin} onLogout={handleLogout}/>
-      <div className='content'>
-        <HomePage/>
-      </div>
+      <HomePage/>
       <Footer/>
     </div>
   );

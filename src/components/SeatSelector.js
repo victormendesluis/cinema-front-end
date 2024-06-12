@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../style/seatselector.css';
 import { useNavigate } from 'react-router-dom';
+import ConfirmationModal from './ConfirmationModal';
 
 function SeatSelection({ seats, screeningId }) {
   const [seatState, setSeatState] = useState(seats);
@@ -14,6 +15,7 @@ function SeatSelection({ seats, screeningId }) {
     expiryDate: '',
     cvv: ''
   });
+  const [showModal, setShowModal]=useState(false);
   const navigate = useNavigate();
 
   const handleSeatClick = (seat) => {
@@ -104,13 +106,15 @@ function SeatSelection({ seats, screeningId }) {
           seats: selectedSeats,
           screening_id: parseInt(screeningId),
           userIdentifier: userIdentifier,
-          paymentDetails
         }),
       });
       console.log(response);
       if (response.ok) {
-        alert('Asientos reservados con éxito!');
-        navigate('/');
+        setShowModal(true);
+        setTimeout(() => {
+          setShowModal(false);
+          navigate('/')
+        }, 3000);
       } else {
         alert('Error al reservar asientos.');
       }
@@ -167,6 +171,7 @@ function SeatSelection({ seats, screeningId }) {
           </form>
         </div>
       )}
+      <ConfirmationModal show={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 }

@@ -10,10 +10,7 @@ function MovieCard({ movie }) {
 
   return (
     <div className="movie-card" onClick={()=>handleClick(movie.id)}>
-        <img src={movie.image} alt={movie.title} />
-        <div className="movie-info">
-          <h2>{movie.title}</h2>
-        </div>
+      <img src={'/uploads/'+movie.image} alt={movie.title} />
     </div>
   );
 }
