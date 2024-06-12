@@ -50,7 +50,9 @@ function App() {
   return (
     <div className="App">
       <TopBar user={user} onLogin={handleLogin} onLogout={handleLogout}/>
-      <HomePage/>
+      <div className='content'>
+        <HomePage/>
+      </div>
       <Footer/>
     </div>
   );

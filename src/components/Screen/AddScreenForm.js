@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../style/screenform.css';
+import '../../style/screenform.css';
 
 function AddScreenForm() {
   const navigate = useNavigate();

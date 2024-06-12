@@ -1,23 +1,23 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
-import MovieForm from './MovieForm';
-import MoviePage from './MoviePage';
-import MovieList from './MovieList';
-import MovieDetails from './MovieDetails';
-import MovieEditForm from './MovieEditForm';
+import MovieForm from './Movie/MovieForm';
+import MoviePage from './Movie/MoviePage';
+import MovieList from './Movie/MovieList';
+import MovieDetails from './Movie/MovieDetails';
+import MovieEditForm from './Movie/MovieEditForm';
 import RegisterForm from './RegisterForm';
-import UserCard from './UserCard';
-import UserEditForm from './UserEditForm';
-import ScreeningsList from './ScreeningsList';
-import AddScreeningForm from './AddScreeningForm';
+import UserCard from './User/UserCard';
+import UserEditForm from './User/UserEditForm';
+import ScreeningsList from './Screening/ScreeningsList';
+import AddScreeningForm from './Screening/AddScreeningForm';
 import DropdownFunciones from './ScreeningSelector';
 import PrivateRoute from './PrivateRoute';
-import ScreenList from './ScreenList';
-import AddScreenForm from './AddScreenForm';
-import EditScreenForm from './EditScreenForm';
-import EditScreeningForm from './EditScreeningForm';
-import UserTable from './UserTable';
+import ScreenList from './Screen/ScreenList';
+import AddScreenForm from './Screen/AddScreenForm';
+import EditScreenForm from './Screen/EditScreenForm';
+import EditScreeningForm from './Screening/EditScreeningForm';
+import UserTable from './User/UserTable';
 import TicketValidation from './TicketValidation';
 
 function HomePage() {

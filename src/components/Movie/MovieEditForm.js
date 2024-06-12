@@ -1,9 +1,9 @@
-//MovieForm.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../style/movieform.css';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import '../../style/movieform.css';
 
-function MovieForm() {
+function MovieEditForm() {
+  const { id } = useParams();
   const navigate = useNavigate();
   // State para almacenar los valores del formulario
   const [formData, setFormData] = useState({
@@ -22,9 +22,26 @@ function MovieForm() {
     coverFile: null,
     trailer: '',
     ageRating: '',
-    duration: 0,
-    url: ''
+    duration: 0
   });
+
+  useEffect(() => {
+    const fetchMovieDetails = async () => {
+      try {
+        const response = await fetch(`/movies/${id}`);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setFormData(data);
+      } catch (error) {
+        //setError(error.message);
+        console.log(error);
+      }
+    };
+
+    fetchMovieDetails();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,15 +57,6 @@ function MovieForm() {
       ...formData,
       [name]: files[0]
     });
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      originalVersion: name === 'originalVersion' ? checked : !checked,
-      spanishVersion: name === 'spanishVersion' ? checked : !checked,
-    }));
   };
 
   const handleSubmit = async (e) => {
@@ -86,17 +94,14 @@ function MovieForm() {
     }
 
     try {
-      const response = await fetch('/uploadMovieAndImages', {
-        method: 'POST',
+      const response = await fetch(`/movies/${id}`, {
+        method: 'PUT',
         body: formDataToSend,
       });
-
-      if(response.ok){
-        const data = await response.json();
-        if(data){
-          console.log(data);
-          navigate('/movies');
-        }
+      const data = await response.json();
+      if(data){
+        console.log(data);
+        navigate('/movies');
       }
     } catch (error) {
       console.log(error);
@@ -205,7 +210,7 @@ function MovieForm() {
             type="checkbox"
             name="originalVersion"
             checked={formData.originalVersion}
-            onChange={handleCheckboxChange}
+            onChange={handleChange}
           />
           Versión Original
         </label>
@@ -216,13 +221,13 @@ function MovieForm() {
             type="checkbox"
             name="spanishVersion"
             checked={formData.spanishVersion}
-            onChange={handleCheckboxChange}
+            onChange={handleChange}
           />
           Versión en Español
         </label>
       </div>
       <div>
-        <label htmlFor="releaseFile">Cartelera:</label>
+      <label htmlFor="releaseFile">Cartelera:</label>
         <input
           type="file"
           id="releaseFile"
@@ -269,10 +274,10 @@ function MovieForm() {
           onChange={handleChange}
         />
       </div>
-      <button type="submit">Agregar Película</button>
+      <button type="submit">Actualizar Película</button>
       <button onClick={handleBackClick}>Volver</button>
     </form>
   );
 }
 
-export default MovieForm;
+export default MovieEditForm;

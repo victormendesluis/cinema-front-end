@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Importa Link desde react-router-dom
-import '../style/moviecard.css';
+import '../../style/moviecard.css';
 
 function MovieCard({ movie }) {
   const navigate = useNavigate();

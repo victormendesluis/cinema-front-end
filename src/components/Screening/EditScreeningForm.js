@@ -1,34 +1,49 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../style/form.css';  // Importar el archivo CSS
-import { type } from '@testing-library/user-event/dist/type';
+import { useNavigate, useParams } from 'react-router-dom';
+import '../../style/form.css';  // Importar el archivo CSS
 
-const AddScreeningForm = () => {
+const EditScreeningForm = () => {
+  const{ id } = useParams();
   const [formData, setFormData] = useState({
     cinemaName: 'FilMM',
-    screen: 0,
+    screen: '',
     movieTitle: '',
     screeningDayAndHourDTO: {
       screeningDay: '',
       screeningStartTime: '',
     },
     audio: '',
-    screeningPrice: '',
+    price: '',
   });
 
   const [movies, setMovies] = useState([]);
   const [screens, setScreens] = useState([]);
+  const [screening, setScreening] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simular fetch a la API para obtener las películas
-    // Reemplaza esto con tu llamada real a la API
+    const fetchScreening = async () => {
+        try {
+          const response = await fetch(`/screenings/${id}`);
+          if (response.ok) {
+            const data = await response.json();
+            setScreening(data);
+            setFormData(data);
+          } else {
+            console.error('Error al obtener las funciones.');
+          }
+        } catch (error) {
+          console.error('Error al obtener las funciones:', error);
+        }
+      };
+
     const fetchMovies = async () => {
       try {
         const response = await fetch('/movies');
         if (response.ok) {
           const data = await response.json();
           setMovies(data);
+          //console.log('PELICULAS', data);
         } else {
           console.error('Error al obtener las películas.');
         }
@@ -37,8 +52,25 @@ const AddScreeningForm = () => {
       }
     };
 
+    const fetchScreens = async () => {
+      try {
+        const response = await fetch(`/screens`);
+        if (response.ok) {
+          const data = await response.json();
+          setScreens(data);
+          //console.log('SALAS',screens);
+        } else {
+          console.error('Error al obtener las salas.');
+        }
+      } catch (error) {
+        console.error('Error al obtener las salas:', error);
+      }
+    };
+
+    fetchScreening();
     fetchMovies();
-  }, []);
+    fetchScreens();
+  }, [id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,26 +90,6 @@ const AddScreeningForm = () => {
     }
   };
 
-  useEffect(() => {
-    // Fetch screens based on selected cinema
-    const fetchScreens = async () => {
-      try {
-        const response = await fetch(`/screens`);
-        if (response.ok) {
-          const data = await response.json();
-          setScreens(data);
-          //console.log('SALAS',screens);
-        } else {
-          console.error('Error al obtener las salas.');
-        }
-      } catch (error) {
-        console.error('Error al obtener las salas:', error);
-      }
-    };
-
-    fetchScreens();
-  }, []);
-
   const formatDateString = (dateString) => {
     const [year, month, day] = dateString.split('-');
     return `${day}-${month}-${year}`;
@@ -86,13 +98,9 @@ const AddScreeningForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //console.log('PREFORMATEO', formData.screeningDayAndHourDTO.screeningDay);
       formData.screeningDayAndHourDTO.screeningDay=formatDateString(formData.screeningDayAndHourDTO.screeningDay);
-      //console.log('FECHA', formData.screeningDayAndHourDTO.screeningDay, typeof(formData.screeningDayAndHourDTO.screeningDay));
-      //console.log('HORAS', formData.screeningDayAndHourDTO.screeningStartTime, typeof(formData.screeningDayAndHourDTO.screeningStartTime));
-      //console.log('SCREENING', formData);
       const response = await fetch('/screenings', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -116,7 +124,7 @@ const AddScreeningForm = () => {
 
   return (
     <div className="container">
-      <h2>Añadir Nueva Proyección</h2>
+      <h2>Modificar Proyección</h2>
       <form onSubmit={handleSubmit}>
       <div>
           <label>Sala:</label>
@@ -155,7 +163,7 @@ const AddScreeningForm = () => {
           <input
             type="date"
             name="screeningDay"
-            value={formData.screeningDayAndHourDTO.screeningDay}
+            value={formData.dayFromStartTime}
             onChange={handleChange}
             required
           />
@@ -165,7 +173,7 @@ const AddScreeningForm = () => {
           <input
             type="time"
             name="screeningStartTime"
-            value={formData.screeningDayAndHourDTO.screeningStartTime}
+            value={formData.timeFromStarTime}
             onChange={handleChange}
             required
           />
@@ -184,17 +192,17 @@ const AddScreeningForm = () => {
           <label>Precio de la sala:</label>
           <input
             type="number"
-            name="screeningPrice"
-            value={formData.screeningPrice}
+            name="price"
+            value={formData.price}
             onChange={handleChange}
             required
           />
         </div>
-        <button type="submit">Añadir Proyección</button>
+        <button type="submit">Modificar Proyección</button>
         <button onClick={handleBackClick}>Atrás</button>
       </form>
     </div>
   );
 };
 
-export default AddScreeningForm;
+export default EditScreeningForm;

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import MovieCard from './MovieCard';
 import Spinner from 'react-bootstrap/Spinner';
 import Carousel from 'react-bootstrap/Carousel';
-import '../style/moviepage.css'; // Asegúrate de tener este archivo para los estilos
+import '../../style/moviepage.css'; // Asegúrate de tener este archivo para los estilos
 
 const MoviePage = () => {
   const [movies, setMovies] = useState([]);

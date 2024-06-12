@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import '../style/moviedetails.css';
+import '../../style/moviedetails.css';
 
 const MovieDetails = () => {
   const { id } = useParams();

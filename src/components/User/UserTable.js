@@ -3,7 +3,7 @@ import { Table, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 
-import '../style/usertable.css'
+import '../../style/usertable.css'
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
