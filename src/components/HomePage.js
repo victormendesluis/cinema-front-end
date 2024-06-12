@@ -84,21 +84,16 @@ function HomePage() {
             } 
           />
 
-          <Route path="/reserve/:id" element={<DropdownFunciones/>} />
+          <Route path="/reserve/:id" element={
+            <PrivateRoute>
+              <DropdownFunciones/>
+            </PrivateRoute>}/>
 
           <Route 
             path="/screenings" 
             element={
             <PrivateRoute>
               {<ScreeningsList/>}
-            </PrivateRoute>
-          }/>
-
-          <Route 
-            path="/screenings/:id/edit" 
-            element={
-            <PrivateRoute>
-              {<EditScreeningForm/>}
             </PrivateRoute>
           }/>
 
@@ -126,13 +121,6 @@ function HomePage() {
             </PrivateRoute>
           }/>
 
-          <Route 
-            path="/screens/:id/edit" 
-            element={
-            <PrivateRoute>
-              {<EditScreenForm/>}
-            </PrivateRoute>
-          }/>
           <Route 
             path="/ticket" 
             element={
