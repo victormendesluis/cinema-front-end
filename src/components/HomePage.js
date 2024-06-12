@@ -15,9 +15,6 @@ import DropdownFunciones from './ScreeningSelector';
 import PrivateRoute from './PrivateRoute';
 import ScreenList from './Screen/ScreenList';
 import AddScreenForm from './Screen/AddScreenForm';
-import EditScreenForm from './Screen/EditScreenForm';
-import EditScreeningForm from './Screening/EditScreeningForm';
-import UserTable from './User/UserTable';
 import TicketValidation from './TicketValidation';
 import UserPage from './User/UserPage';
 

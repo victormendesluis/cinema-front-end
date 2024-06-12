@@ -12,7 +12,7 @@ function App() {
   useEffect(() => {
     const storedUser = localStorage.getItem('token');
     const admin=localStorage.getItem('admin');
-    if (storedUser && admin) {
+    if (storedUser || admin) {
       var userData=getUsuario();
       setUser(userData);
     }
