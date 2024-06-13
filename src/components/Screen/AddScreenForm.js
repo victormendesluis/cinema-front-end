@@ -53,14 +53,15 @@ function AddScreenForm() {
         });
 
         if (response.ok) {
-          alert('Screen added successfully!');
+          alert('Sala añadida correctamente!');
           navigate('/screens'); // Redirect to the screens list page
         } else {
-          console.error('Failed to add screen');
+          alert('Error al añadir una sala');
+          console.error('Error al añadir una sala');
         }
       }
     } catch (error) {
-      console.error('Error adding screen:', error);
+      console.error('Error al añadir una sala', error);
     }
   };
 
